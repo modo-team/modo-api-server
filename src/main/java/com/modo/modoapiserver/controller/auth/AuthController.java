@@ -16,7 +16,7 @@ public class AuthController {
     @PostMapping("/sign-up")
     public ResponseEntity<?> register(@RequestParam String email, @RequestParam String password) {
         User newUser = authService.registerUser(email, password);
-        return ResponseEntity.ok("login succeeded");
+        return ResponseEntity.ok("sing up succeeded");
     }
 
     @PostMapping("/sign-in")

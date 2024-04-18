@@ -41,9 +41,9 @@ public class AuthorizeService{
         return newUser;
     }
 
-    public LoginResponseDto login(String email, String encodedPassword) {
+    public LoginResponseDto login(String email, String password) {
         User user = userRepository.findByEmail(email);
-        if (user == null || !passwordEncoder.matches(encodedPassword, user.getPassword())) {
+        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
             throw new IllegalStateException("Invalid credentials");
         }
         return new LoginResponseDto(user.getId(), generateToken(user));
