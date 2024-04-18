@@ -1,4 +1,4 @@
-package com.modo.modoapiserver.dto;
+package com.modo.modoapiserver.dto.service.user;
 
 public class UserDto {
     private String email;
