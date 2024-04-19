@@ -53,6 +53,7 @@ public class AuthorizeService{
         long now = System.currentTimeMillis();
         return Jwts.builder()
                 .setSubject(user.getEmail())
+                .claim("id", user.getId())
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + 1000 * 60 * 60 * 24)) // 1 day expiration
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
