@@ -16,7 +16,8 @@ public class KakaoOAuth2Service {
 
     private final String KAKAO_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
     private final String KAKAO_USERINFO_URL = "https://kapi.kakao.com/v2/user/me";
-    private final String KAKAO_APP_KEY = "b2227bde459023910498f777b84a09cb";
+    private final String KAKAO_CLIENT_ID = "b2227bde459023910498f777b84a09cb";
+    private final String KAKAO_CLIENT_SECRET = "8q3XHQmlkd1VpBdb0Q8RQBW2LYlFkUT2";
     private final String KAKAO_REDIRECT_URI = "https://modo-team.com/oauth";
 
     public String getKakaoAccessToken(String code) {
@@ -27,7 +28,8 @@ public class KakaoOAuth2Service {
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
-        params.add("client_id", KAKAO_APP_KEY);
+        params.add("client_id", KAKAO_CLIENT_ID);
+        params.add("client_secret", KAKAO_CLIENT_SECRET);
         params.add("redirect_uri", KAKAO_REDIRECT_URI);
         params.add("code", code);
 
