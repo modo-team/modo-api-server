@@ -1,28 +1,44 @@
 package com.modo.modoapiserver.config;
 
-import com.modo.modoapiserver.security.EmailLoginFilter;
+import com.modo.modoapiserver.security.CustomUserDetailsService;
+import com.modo.modoapiserver.security.JwtAuthFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig{
-    private final AuthenticationConfiguration authenticationConfiguration;
+    @Autowired
+    private AuthenticationConfiguration authenticationConfiguration;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration){
-        this.authenticationConfiguration = authenticationConfiguration;
+    @Autowired
+    private JwtAuthFilter jwtAuthFilter;
+
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
+
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(customUserDetailsService);
+        return authProvider;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -38,29 +54,14 @@ public class SecurityConfig{
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/sign-in", "/api/sign-up").permitAll()
+                        .requestMatchers("/api/sign-up", "/api/sign-in").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic().disable()
-                .formLogin().disable();
-        http
-                .addFilterAt(
-                        new EmailLoginFilter(this.authenticationManager(this.authenticationConfiguration)),
+                .formLogin().disable()
+                .addFilterAfter(
+                        jwtAuthFilter,
                         UsernamePasswordAuthenticationFilter.class
                 );
         return http.build();
     }
-
-    private JwtAuthenticationConverter myJwtAuthenticationConverter() {
-        JwtAuthenticationConverter jwtConverter = new JwtAuthenticationConverter();
-        jwtConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
-            String userId = jwt.getSubject();
-            return java.util.Collections.singletonList(new SimpleGrantedAuthority("USER"));
-        });
-        return jwtConverter;
-    }
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
 }
