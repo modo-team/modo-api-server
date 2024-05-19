@@ -6,6 +6,7 @@ public class UserDto {
     private String username;
     private String mobileNumber;
     private int age;
+    private String externalId;
 
     public String getEmail() {
         return email;
@@ -45,5 +46,12 @@ public class UserDto {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
+    public String getExternalId() {
+        return externalId;
     }
 }

@@ -20,7 +20,8 @@ public class UserService {
                 userDto.getPassword(),
                 userDto.getUsername(),
                 userDto.getAge(),
-                userDto.getMobileNumber()
+                userDto.getMobileNumber(),
+                userDto.getExternalId()
         );
         return userRepository.save(user);
     }
