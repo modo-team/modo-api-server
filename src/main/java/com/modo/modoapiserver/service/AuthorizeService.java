@@ -31,26 +31,8 @@ public class AuthorizeService{
         } else if (userDto.getPassword() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password is required.");
         }
-        User user = new User(
-                userDto.getEmail(),
-                userDto.getPassword(),
-                userDto.getUsername(),
-                userDto.getAge(),
-                userDto.getMobileNumber(),
-                userDto.getExternalId()
-        );
+        User user = new User(userDto);
         return userRepository.save(user);
-    }
-
-    public User registerUser(String email, String password) {
-        if (!userRepository.findByEmail(email).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use.");
-        }
-        User newUser = new User();
-        newUser.setEmail(email);
-        newUser.setPassword(passwordEncoder.encode(password));
-        userRepository.save(newUser);
-        return newUser;
     }
 
     public LoginResponseDto login(String email, String password) {

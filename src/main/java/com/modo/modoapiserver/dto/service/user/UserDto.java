@@ -1,57 +1,29 @@
 package com.modo.modoapiserver.dto.service.user;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class UserDto {
     private String email;
     private String password;
     private String username;
     private String mobileNumber;
-    private int age;
+    private String birth;
+    private String gender;
     private String externalId;
+    private String externalType;
 
-    public String getEmail() {
-        return email;
+    public UserDto() {
     }
 
-    public void setEmail(String email) {
+    public UserDto(String email, String password, String nickname, String gender, String birth) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
         this.password = password;
+        this.username = nickname;
+        this.gender = gender;
+        this.birth = birth;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getMobileNumber() {
-        return mobileNumber;
-    }
-
-    public void setMobileNumber(String mobileNumber) {
-        this.mobileNumber = mobileNumber;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public void setExternalId(String externalId) {
-        this.externalId = externalId;
-    }
-    public String getExternalId() {
-        return externalId;
-    }
 }
