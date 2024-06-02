@@ -8,10 +8,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class LoginResponseDto {
-    @JsonProperty("id")
-    private Long id;
+public class OauthLoginRequestDto {
+    @JsonProperty("code")
+    private String code;
 
-    @JsonProperty("access_token")
-    private String accessToken;
+    @JsonProperty("redirect_uri")
+    private String requestUri;
 }

@@ -54,8 +54,8 @@ public class SecurityConfig{
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/sign-up", "/api/sign-in").permitAll()
-                        .requestMatchers("/api/kakao/sign-up", "/api/kakao/sign-in").permitAll()
+                        .requestMatchers("/api/sign-up*", "/api/sign-in*").permitAll()
+                        .requestMatchers("/api/kakao/sign-up*", "/api/kakao/sign-in*").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic().disable()
                 .formLogin().disable()
