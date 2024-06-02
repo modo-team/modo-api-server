@@ -22,7 +22,7 @@ public class UserService {
     public User getUser(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-        if( user.getPassword() == password )
+        if( user.getPassword().equals(password) )
             return user;
         else
             return null;
