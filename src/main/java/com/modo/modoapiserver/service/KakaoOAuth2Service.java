@@ -1,56 +1,53 @@
 package com.modo.modoapiserver.service;
 
+import java.util.Map;
+import java.util.Objects;
+
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Map;
+import com.modo.modoapiserver.dto.controller.auth.KakaoOAuth;
 
 @Service
 public class KakaoOAuth2Service {
 
-    private final String KAKAO_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
-    private final String KAKAO_USERINFO_URL = "https://kapi.kakao.com/v2/user/me";
-    private final String KAKAO_CLIENT_ID = "b2227bde459023910498f777b84a09cb";
-    private final String KAKAO_CLIENT_SECRET = "8q3XHQmlkd1VpBdb0Q8RQBW2LYlFkUT2";
-    private final String KAKAO_REDIRECT_URI = "https://modo-team.com/oauth";
+	private final String KAKAO_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
+	private final String KAKAO_USERINFO_URL = "https://kapi.kakao.com/v2/user/me";
 
-    public String getKakaoAccessToken(String code) {
-        RestTemplate restTemplate = new RestTemplate();
+	public String getKakaoAccessToken(KakaoOAuth kakaoOAuth) {
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+		RestTemplate restTemplate = new RestTemplate();
 
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "authorization_code");
-        params.add("client_id", KAKAO_CLIENT_ID);
-        params.add("client_secret", KAKAO_CLIENT_SECRET);
-        params.add("redirect_uri", KAKAO_REDIRECT_URI);
-        params.add("code", code);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
-        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
 
-        ResponseEntity<Map> response = restTemplate.exchange(KAKAO_TOKEN_URL, HttpMethod.POST, kakaoTokenRequest, Map.class);
+		HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(kakaoOAuth.toParams(), headers);
 
-        return response.getBody().get("access_token").toString();
-    }
+		ResponseEntity<Map<String, Object>> response = restTemplate.exchange(KAKAO_TOKEN_URL, HttpMethod.POST,
+			kakaoTokenRequest, new ParameterizedTypeReference<>() {});
 
-    public Map<String, Object> getKakaoUserInfo(String accessToken) {
-        RestTemplate restTemplate = new RestTemplate();
+		return Objects.requireNonNull(response.getBody()).get("access_token").toString();
+	}
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + accessToken);
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+	public Map<String, Object> getKakaoUserInfo(String accessToken) {
+		RestTemplate restTemplate = new RestTemplate();
 
-        HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest = new HttpEntity<>(headers);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "Bearer " + accessToken);
+		headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
-        ResponseEntity<Map> response = restTemplate.exchange(KAKAO_USERINFO_URL, HttpMethod.POST, kakaoProfileRequest, Map.class);
+		HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest = new HttpEntity<>(headers);
 
-        return response.getBody();
-    }
+		ResponseEntity<Map> response = restTemplate.exchange(KAKAO_USERINFO_URL, HttpMethod.POST, kakaoProfileRequest,
+			Map.class);
+
+		return response.getBody();
+	}
 }
