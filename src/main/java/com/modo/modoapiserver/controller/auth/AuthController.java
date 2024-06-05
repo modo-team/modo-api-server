@@ -46,17 +46,6 @@ public class AuthController {
         String kakaoAuthorizationCode = data.getCode();
         String accessToken = kakaoOAuth2Service.getKakaoAccessToken(kakaoAuthorizationCode, data.getRequestUri(), data.getCodeVerifier());
         Map<String, Object> userInfo = kakaoOAuth2Service.getKakaoUserInfo(accessToken);
-        authService.registerExternalUser(userInfo.get("id").toString(), "kakao");
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/kakao/sign-in")
-    public ResponseEntity<LoginResponseDto> kakaoSignIn(@RequestBody OauthLoginRequestDto data) {
-        String kakaoAuthorizationCode = data.getCode();
-        String accessToken = kakaoOAuth2Service.getKakaoAccessToken(kakaoAuthorizationCode, data.getRequestUri(), data.getCodeVerifier());
-        Map<String, Object> userInfo = kakaoOAuth2Service.getKakaoUserInfo(accessToken);
-        String externalId = userInfo.get("id").toString();
-        String externalType = "kakao";
-        return ResponseEntity.ok(authService.externalLogin(externalId, externalType));
+        return ResponseEntity.ok(authService.registerExternalUser(userInfo.get("id").toString(), "kakao"));
     }
 }

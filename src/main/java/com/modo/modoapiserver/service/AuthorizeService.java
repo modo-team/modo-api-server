@@ -34,37 +34,31 @@ public class AuthorizeService{
         User user = new User(userDto);
         return userRepository.save(user);
     }
-    public User registerExternalUser(String externalId, String externalType){
-        if (!userRepository.findByExternalId(externalId).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "External ID already in use.");
-        }
-
-        User user = User.builder()
-                .externalId(externalId)
-                .password(externalId)
-                .externalType(externalType)
-                .build();
-        return userRepository.save(user);
-    }
-
-    public LoginResponseDto login(String email, String password) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new IllegalStateException("Invalid credentials");
-        }
-        return new LoginResponseDto(user.getId(), jwtUtil.generateToken(user));
-    }
-
-    public LoginResponseDto externalLogin(String externalId, String externalType) {
+    public LoginResponseDto registerExternalUser(String externalId, String externalType){
         User user = userRepository.findByExternalIdAndExternalType(externalId, externalType)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with external ID: " + externalId + " and external type: " + externalType));
+                .orElseGet(() -> User.builder()
+                        .externalId(externalId)
+                        .password(externalId)
+                        .externalType(externalType)
+                        .build()
+                );
+
+        if (user.isEmpty()) {
+            userRepository.save(user);
+        }
 
         return LoginResponseDto.builder()
                 .id(user.getId())
                 .accessToken(jwtUtil.generateToken(user))
                 .build();
+    }
 
-
+    public LoginResponseDto login(String email, String password) {
+        User user = userRepository.findByEmailAndExternalTypeIsNull(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new IllegalStateException("Invalid credentials");
+        }
+        return new LoginResponseDto(user.getId(), jwtUtil.generateToken(user));
     }
 }
