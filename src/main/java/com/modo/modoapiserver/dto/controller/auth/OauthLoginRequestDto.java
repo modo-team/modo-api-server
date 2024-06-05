@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.security.PrivateKey;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -14,4 +16,7 @@ public class OauthLoginRequestDto {
 
     @JsonProperty("redirect_uri")
     private String requestUri;
+
+    @JsonProperty("code_verifier")
+    private String codeVerifier;
 }

@@ -21,6 +21,10 @@ public class User {
     private String externalId;
     private String externalType;
 
+    public User() {
+
+    }
+
     public User(UserDto userDto) {
         this.email = userDto.getEmail();
         this.password = userDto.getPassword();

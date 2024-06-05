@@ -20,7 +20,7 @@ public class KakaoOAuth2Service {
     private final String KAKAO_CLIENT_SECRET = "8q3XHQmlkd1VpBdb0Q8RQBW2LYlFkUT2";
     private final String KAKAO_REDIRECT_URI = "https://modo-team.com/oauth";
 
-    public String getKakaoAccessToken(String code, String redirectUri) {
+    public String getKakaoAccessToken(String code, String redirectUri, String codeVerifier){
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
@@ -32,6 +32,7 @@ public class KakaoOAuth2Service {
         params.add("client_secret", KAKAO_CLIENT_SECRET);
         params.add("redirect_uri", redirectUri);
         params.add("code", code);
+        params.add("code_verifier", codeVerifier);
 
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
 
