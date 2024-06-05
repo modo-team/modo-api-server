@@ -12,9 +12,15 @@ public class UserInfoResponseDto {
     @JsonProperty("id")
     private Long id;
 
+    @JsonProperty("email")
+    private String email;
+
     @JsonProperty("name")
     private String name;
 
-    @JsonProperty("nickname")
-    private String nickname;
+    @JsonProperty("birth")
+    private String birth;
+
+    @JsonProperty("gender")
+    private String gender;
 }
