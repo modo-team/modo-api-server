@@ -2,12 +2,14 @@ package com.modo.modoapiserver.model;
 
 import com.modo.modoapiserver.dto.service.user.UserDto;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter @Setter
 @Entity
 @Table(name="user")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
+@Builder
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,14 +27,4 @@ public class User {
 
     }
 
-    public User(UserDto userDto) {
-        this.email = userDto.getEmail();
-        this.password = userDto.getPassword();
-        this.username = userDto.getUsername();
-        this.birth = userDto.getBirth();
-        this.gender = userDto.getGender();
-        this.mobileNumber = userDto.getMobileNumber();
-        this.externalId = userDto.getExternalId();
-        this.externalType = userDto.getExternalType();
-    }
 }

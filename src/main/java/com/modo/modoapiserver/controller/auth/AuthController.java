@@ -46,11 +46,7 @@ public class AuthController {
         String kakaoAuthorizationCode = data.getCode();
         String accessToken = kakaoOAuth2Service.getKakaoAccessToken(kakaoAuthorizationCode, data.getRequestUri(), data.getCodeVerifier());
         Map<String, Object> userInfo = kakaoOAuth2Service.getKakaoUserInfo(accessToken);
-        UserDto userDto = new UserDto();
-        userDto.setExternalId(userInfo.get("id").toString());
-        userDto.setPassword(userInfo.get("id").toString()); // 카카오 ID를 비밀번호로 사용
-        userDto.setExternalType("kakao");
-        authService.registerUser(userDto);
+        authService.registerExternalUser(userInfo.get("id").toString(), "kakao");
         return ResponseEntity.ok().build();
     }
 
@@ -60,6 +56,7 @@ public class AuthController {
         String accessToken = kakaoOAuth2Service.getKakaoAccessToken(kakaoAuthorizationCode, data.getRequestUri(), data.getCodeVerifier());
         Map<String, Object> userInfo = kakaoOAuth2Service.getKakaoUserInfo(accessToken);
         String externalId = userInfo.get("id").toString();
-        return ResponseEntity.ok(authService.login(externalId));
+        String externalType = "kakao";
+        return ResponseEntity.ok(authService.externalLogin(externalId, externalType));
     }
 }

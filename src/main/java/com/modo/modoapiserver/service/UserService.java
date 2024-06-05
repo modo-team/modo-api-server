@@ -15,7 +15,12 @@ public class UserService {
     private UserRepository userRepository;
 
     public User registerNewUserAccount(UserDto userDto) {
-        User user = new User(userDto);
+        User user = User.builder().email(userDto.getEmail())
+                .password(userDto.getPassword())
+                .username(userDto.getUsername())
+                .mobileNumber(userDto.getMobileNumber())
+                .birth(userDto.getBirth())
+                .build();
         return userRepository.save(user);
     }
 

@@ -34,6 +34,18 @@ public class AuthorizeService{
         User user = new User(userDto);
         return userRepository.save(user);
     }
+    public User registerExternalUser(String externalId, String externalType){
+        if (!userRepository.findByExternalId(externalId).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "External ID already in use.");
+        }
+
+        User user = User.builder()
+                .externalId(externalId)
+                .password(externalId)
+                .externalType(externalType)
+                .build();
+        return userRepository.save(user);
+    }
 
     public LoginResponseDto login(String email, String password) {
         User user = userRepository.findByEmail(email)
@@ -44,9 +56,15 @@ public class AuthorizeService{
         return new LoginResponseDto(user.getId(), jwtUtil.generateToken(user));
     }
 
-    public LoginResponseDto login(String externalId) {
-        User user = userRepository.findByExternalId(externalId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with external ID: " + externalId));
-        return new LoginResponseDto(user.getId(), jwtUtil.generateToken(user));
+    public LoginResponseDto externalLogin(String externalId, String externalType) {
+        User user = userRepository.findByExternalIdAndExternalType(externalId, externalType)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with external ID: " + externalId + " and external type: " + externalType));
+
+        return LoginResponseDto.builder()
+                .id(user.getId())
+                .accessToken(jwtUtil.generateToken(user))
+                .build();
+
+
     }
 }
