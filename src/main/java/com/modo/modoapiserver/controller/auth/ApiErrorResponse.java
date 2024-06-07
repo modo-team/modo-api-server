@@ -2,10 +2,9 @@ package com.modo.modoapiserver.controller.auth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
-import lombok.Getter;
 
 @Builder
-public class ApiResponse {
+public class ApiErrorResponse {
 
     @JsonProperty
     private String msg;
@@ -13,8 +12,8 @@ public class ApiResponse {
     @JsonProperty
     private String code;
 
-    public static ApiResponse of(String msg, String code) {
-        return ApiResponse.builder()
+    public static ApiErrorResponse of(String msg, String code) {
+        return ApiErrorResponse.builder()
                 .msg(msg)
                 .code(code)
                 .build();
