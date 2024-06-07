@@ -12,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import static org.springframework.util.StringUtils.hasText;
+
 @Service
 public class AuthorizeService{
     @Autowired
@@ -26,12 +28,19 @@ public class AuthorizeService{
     public User registerUser(UserDto userDto) {
         if (!userRepository.findByEmail(userDto.getEmail()).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use.");
-        } else if (!userRepository.findByExternalId(userDto.getExternalId()).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "External ID already in use.");
-        } else if (userDto.getPassword() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password is required.");
         }
-        User user = new User(userDto);
+
+        if (!userDto.hasValidPassword()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Valid password is required.");
+        }
+
+        User user = User.builder()
+                .email(userDto.getEmail())
+                .password(passwordEncoder.encode(userDto.getPassword()))
+                .username(userDto.getUsername())
+                .mobileNumber(userDto.getMobileNumber())
+                .birth(userDto.getBirth())
+                .build();
         return userRepository.save(user);
     }
     public LoginResponseDto registerExternalUser(String externalId, String externalType){
@@ -59,6 +68,10 @@ public class AuthorizeService{
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new IllegalStateException("Invalid credentials");
         }
-        return new LoginResponseDto(user.getId(), jwtUtil.generateToken(user));
+
+        return LoginResponseDto.builder()
+                .id(user.getId())
+                .accessToken(jwtUtil.generateToken(user))
+                .build();
     }
 }

@@ -23,8 +23,12 @@ public class User {
     private String externalId;
     private String externalType;
 
-    public User() {
+    public boolean isEmpty() {
+        return this.id == null;
+    }
 
+    public static User empty() {
+        return User.builder().build();
     }
 
 }

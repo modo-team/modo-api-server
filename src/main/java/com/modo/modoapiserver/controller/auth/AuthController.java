@@ -41,8 +41,8 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(data.getEmail(), data.getPassword()));
     }
 
-    @PostMapping("/kakao/sign-up")
-    public ResponseEntity<?> kakaoSignUp(@RequestBody OauthLoginRequestDto data) {
+    @PostMapping("/oauth/kakao")
+    public ResponseEntity<LoginResponseDto> kakaoSignUp(@RequestBody OauthLoginRequestDto data) {
         String kakaoAuthorizationCode = data.getCode();
         String accessToken = kakaoOAuth2Service.getKakaoAccessToken(kakaoAuthorizationCode, data.getRequestUri(), data.getCodeVerifier());
         Map<String, Object> userInfo = kakaoOAuth2Service.getKakaoUserInfo(accessToken);

@@ -1,5 +1,6 @@
 package com.modo.modoapiserver.service;
 
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -9,6 +10,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.Map;
 
 @Service
@@ -50,7 +52,10 @@ public class KakaoOAuth2Service {
 
         HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest = new HttpEntity<>(headers);
 
-        ResponseEntity<Map> response = restTemplate.exchange(KAKAO_USERINFO_URL, HttpMethod.POST, kakaoProfileRequest, Map.class);
+        ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+                KAKAO_USERINFO_URL, HttpMethod.POST, kakaoProfileRequest,
+                new ParameterizedTypeReference<>() {}
+        );
 
         return response.getBody();
     }

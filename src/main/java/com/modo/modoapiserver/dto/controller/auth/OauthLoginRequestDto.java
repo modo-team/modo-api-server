@@ -7,9 +7,8 @@ import lombok.Setter;
 
 import java.security.PrivateKey;
 
+
 @Getter
-@Setter
-@AllArgsConstructor
 public class OauthLoginRequestDto {
     @JsonProperty("code")
     private String code;

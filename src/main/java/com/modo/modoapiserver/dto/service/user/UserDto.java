@@ -2,6 +2,7 @@ package com.modo.modoapiserver.dto.service.user;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.util.StringUtils;
 
 @Getter
 @Setter
@@ -24,6 +25,10 @@ public class UserDto {
         this.username = nickname;
         this.gender = gender;
         this.birth = birth;
+    }
+
+    public boolean hasValidPassword() {
+        return StringUtils.hasText(this.password);
     }
 
 }
