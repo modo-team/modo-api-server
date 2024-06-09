@@ -1,0 +1,29 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: modo-api-server
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: admin
+    url: jdbc:mysql://modo-database-dev.cl2kqia82hpp.ap-northeast-2.rds.amazonaws.com/modo?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    password: HhE5dVR5yWXnukM1kOJj
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: 'true'
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    tagsSorter: alpha
+    operations-sorter: alpha
+    display-request-duration: true
+    springdoc:
+      api-docs:

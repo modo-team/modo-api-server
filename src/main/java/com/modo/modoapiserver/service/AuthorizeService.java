@@ -40,6 +40,7 @@ public class AuthorizeService{
                 .username(userDto.getUsername())
                 .mobileNumber(userDto.getMobileNumber())
                 .birth(userDto.getBirth())
+                .gender(userDto.getGender())
                 .build();
         return userRepository.save(user);
     }
