@@ -41,6 +41,7 @@ public class SecurityConfig{
         return new BCryptPasswordEncoder();
     }
 
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
         return authenticationConfiguration.getAuthenticationManager();
@@ -54,7 +55,11 @@ public class SecurityConfig{
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/sign-up", "/api/sign-in").permitAll()
+                        .requestMatchers("/api/sign-up*", "/api/sign-in*").permitAll()
+                        .requestMatchers("/api/oauth/kakao*").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/v3/api-docs").permitAll()
+                        .requestMatchers("/v3/api-docs/swagger-config").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic().disable()
                 .formLogin().disable()
