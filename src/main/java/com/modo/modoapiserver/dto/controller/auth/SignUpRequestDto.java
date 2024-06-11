@@ -1,4 +1,4 @@
-package com.modo.modoapiserver.dto.controller.user;
+package com.modo.modoapiserver.dto.controller.auth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -8,19 +8,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UserInfoResponseDto {
-    @JsonProperty("id")
-    private Long id;
-
+public class SignUpRequestDto {
     @JsonProperty("email")
     private String email;
 
-    @JsonProperty("name")
-    private String name;
+    @JsonProperty("password")
+    private String password;
 
-    @JsonProperty("birth")
-    private String birth;
+    @JsonProperty("nickname")
+    private String nickname;
 
     @JsonProperty("gender")
     private String gender;
+
+    @JsonProperty("birth")
+    private String birth;
 }
