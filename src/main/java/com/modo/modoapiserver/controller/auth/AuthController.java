@@ -8,6 +8,7 @@ import com.modo.modoapiserver.dto.service.user.UserDto;
 import com.modo.modoapiserver.model.User;
 import com.modo.modoapiserver.service.AuthorizeService;
 import com.modo.modoapiserver.service.KakaoOAuth2Service;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ public class AuthController {
     @Autowired
     private KakaoOAuth2Service kakaoOAuth2Service;
 
+    @Operation(summary = "이메일 회원가입", description = "회원가입을 진행합니다")
     @PostMapping("/sign-up")
     public ResponseEntity<?> register(@RequestBody SignUpRequestDto data) {
         UserDto userDto = new UserDto(
@@ -36,11 +38,13 @@ public class AuthController {
         return ResponseEntity.ok("signup succeeded");
     }
 
+    @Operation(summary = "이메일 로그인", description = "로그인을 진행합니다")
     @PostMapping("/sign-in")
     public ResponseEntity<LoginResponseDto> login(@RequestBody SignInRequestDto data) {
         return ResponseEntity.ok(authService.login(data.getEmail(), data.getPassword()));
     }
 
+    @Operation(summary = "카카오 로그인/회원가입", description = "카카오 로그인 및 회원가입을 진행합니다")
     @PostMapping("/oauth/kakao")
     public ResponseEntity<LoginResponseDto> kakaoSignUp(@RequestBody OauthLoginRequestDto data) {
         String kakaoAuthorizationCode = data.getCode();
