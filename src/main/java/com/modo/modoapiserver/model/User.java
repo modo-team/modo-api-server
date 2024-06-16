@@ -1,6 +1,8 @@
 package com.modo.modoapiserver.model;
 
 import com.modo.modoapiserver.dto.service.user.UserDto;
+import com.modo.modoapiserver.enums.Gender;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,7 +20,9 @@ public class User {
     private String password;
     private String username;
     private String birth;
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = true)
+    private Gender gender;
     private String mobileNumber;
     private String externalId;
     private String externalType;

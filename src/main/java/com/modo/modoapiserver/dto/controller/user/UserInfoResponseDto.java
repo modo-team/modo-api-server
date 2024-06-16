@@ -1,6 +1,7 @@
 package com.modo.modoapiserver.dto.controller.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.modo.modoapiserver.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,5 +23,5 @@ public class UserInfoResponseDto {
     private String birth;
 
     @JsonProperty("gender")
-    private String gender;
+    private Gender gender;
 }
