@@ -25,7 +25,7 @@ public class JwtUtil {
         long now = System.currentTimeMillis();
         return Jwts.builder()
                 .setSubject(user.getEmail())
-                .claim("jti", user.getId())
+                .claim("identity", user.getId())
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + 1000 * 60 * 60 * 24)) // 1 day expiration
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -48,8 +48,9 @@ public class JwtUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+        Object identity = claims.get("identity");
 
-        return claims.getSubject().equals(user.getUsername());
+        return identity.equals(Integer.parseInt(user.getUsername()));
     }
 
     public String getEmailFromToken(String token) {
@@ -70,5 +71,14 @@ public class JwtUtil {
                 .getBody();
 
         return claims.getId();
+    }
+
+    public Long getIdentityFromToken(String token){
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.get("identity", Long.class);
     }
 }

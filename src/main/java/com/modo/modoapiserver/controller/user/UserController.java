@@ -29,8 +29,8 @@ public class UserController {
     public ResponseEntity<UserInfoResponseDto> getUserProfile(@AuthenticationPrincipal UserDetails userDetails){
         if (userDetails != null) {
             // userDetails.getUsername() 메서드는 JWT 토큰에서 추출한 사용자 이름을 반환합니다.
-            String email = userDetails.getUsername();
-            User user = userService.getUser(email);
+            Long userId = Long.parseLong(userDetails.getUsername());
+            User user = userService.getUserById(userId);
             UserInfoResponseDto userInfoResponseDto = new UserInfoResponseDto(user.getId(), user.getEmail(), user.getUsername(), user.getBirth(), user.getGender());
             return ResponseEntity.ok(userInfoResponseDto);
         } else {
