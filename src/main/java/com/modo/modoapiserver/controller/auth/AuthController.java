@@ -9,6 +9,7 @@ import com.modo.modoapiserver.model.User;
 import com.modo.modoapiserver.service.AuthorizeService;
 import com.modo.modoapiserver.service.KakaoOAuth2Service;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class AuthController {
 
     @Operation(summary = "이메일 회원가입", description = "회원가입을 진행합니다")
     @PostMapping("/sign-up")
-    public ResponseEntity<?> register(@RequestBody SignUpRequestDto data) {
+    public ResponseEntity<?> register(@Valid @RequestBody SignUpRequestDto data) {
         UserDto userDto = new UserDto(
                 data.getEmail(),
                 data.getPassword(),
@@ -47,8 +48,11 @@ public class AuthController {
     @Operation(summary = "카카오 로그인/회원가입", description = "카카오 로그인 및 회원가입을 진행합니다")
     @PostMapping("/oauth/kakao")
     public ResponseEntity<LoginResponseDto> kakaoSignUp(@RequestBody OauthLoginRequestDto data) {
-        String kakaoAuthorizationCode = data.getCode();
-        String accessToken = kakaoOAuth2Service.getKakaoAccessToken(kakaoAuthorizationCode, data.getRequestUri(), data.getCodeVerifier());
+        String accessToken = data.getAccessToken();
+        if (accessToken == null) {
+            String kakaoAuthorizationCode = data.getCode();
+            accessToken = kakaoOAuth2Service.getKakaoAccessToken(kakaoAuthorizationCode, data.getRequestUri(), data.getCodeVerifier());
+        }
         Map<String, Object> userInfo = kakaoOAuth2Service.getKakaoUserInfo(accessToken);
         return ResponseEntity.ok(authService.registerExternalUser(userInfo.get("id").toString(), "kakao"));
     }

@@ -8,8 +8,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestControllerAdvice
 public class AuthControllerAdvice {
-
-
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<ApiErrorResponse> handleResponseStatusException(ResponseStatusException e) {
         return ResponseEntity
