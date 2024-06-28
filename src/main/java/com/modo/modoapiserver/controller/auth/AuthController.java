@@ -49,7 +49,7 @@ public class AuthController {
     @PostMapping("/oauth/kakao")
     public ResponseEntity<LoginResponseDto> kakaoSignUp(@RequestBody OauthLoginRequestDto data) {
         String accessToken = data.getAccessToken();
-        if (accessToken == null) {
+        if (accessToken == null || accessToken.isEmpty()) {
             String kakaoAuthorizationCode = data.getCode();
             accessToken = kakaoOAuth2Service.getKakaoAccessToken(kakaoAuthorizationCode, data.getRequestUri(), data.getCodeVerifier());
         }
