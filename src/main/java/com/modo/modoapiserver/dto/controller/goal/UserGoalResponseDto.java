@@ -1,4 +1,4 @@
-package com.modo.modoapiserver.dto.controller.challenge;
+package com.modo.modoapiserver.dto.controller.goal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class UserChallengeDto {
+public class UserGoalResponseDto {
     @JsonProperty("user_nickname")
     private String userNickname;
     private String status;
