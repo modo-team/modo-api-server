@@ -1,5 +1,6 @@
 package com.modo.modoapiserver.dto.controller.goal;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
@@ -18,14 +19,18 @@ public class UserGoalRequestDto {
     private Integer difficulty;
 
     @Schema(description = "팀 아이디")
+    @JsonProperty("team_id")
     private Long teamId;
 
     @Schema(description = "카테고리 아이디")
+    @JsonProperty("category_id")
     private Long categoryId;
 
     @Schema(description = "목표 인증 방법")
+    @JsonProperty("verification_method")
     private String verificationMethod;
 
     @Schema(description = "목표 날짜")
+    @JsonProperty("goal_datetime")
     private LocalDateTime goalDatetime;
 }
