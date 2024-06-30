@@ -23,7 +23,7 @@ public class UserGoalController {
     UserGoalService userGoalService;
     @Operation(summary = "목표 생성하기", description = "목표를 생성합니다")
     @PostMapping("/goal")
-    public ResponseEntity<UserGoal> saveUserGoal(@RequestBody UserGoalRequestDto data, @AuthenticationPrincipal CustomUserDetails userDetails){
+    public ResponseEntity<UserGoalDto> saveUserGoal(@RequestBody UserGoalRequestDto data, @AuthenticationPrincipal CustomUserDetails userDetails){
         UserGoalDto userGoalDto = UserGoalDto.builder()
                 .goalDatetime(data.getGoalDatetime())
                 .title(data.getTitle())
@@ -35,15 +35,38 @@ public class UserGoalController {
                 .userId(userDetails.getIdentity())
                 .build();
         UserGoal userGoal = userGoalService.saveUserGoal(userGoalDto);
-        return ResponseEntity.ok(userGoal);
+
+        UserGoalDto newUserGoalDto = UserGoalDto.builder()
+                .id(userGoal.getId())
+                .goalDatetime(userGoal.getGoalDatetime())
+                .title(userGoal.getTitle())
+                .icon(userGoal.getIcon())
+                .difficulty(userGoal.getDifficulty())
+                .teamId(userGoal.getTeamId())
+                .categoryId(userGoal.getCategoryId())
+                .verificationMethod(userGoal.getVerificationMethod())
+                .build();
+
+        return ResponseEntity.ok(newUserGoalDto);
     }
 
     @Operation(summary = "목표 상세 가져오기", description = "목표 상세를 가져옵니다")
     @GetMapping("/goal/{id}")
-    public ResponseEntity<UserGoal> getUserGoal(@PathVariable("id") Long id){
+    public ResponseEntity<UserGoalDto> getUserGoal(@PathVariable("id") Long id){
         // TODO: jwt 토큰에서 사용자 정보를 가져와서 사용자의 목표인지 확인하는 로직 추가
         UserGoal userGoal = userGoalService.getUserGoal(id);
-        return ResponseEntity.ok(userGoal);
+        UserGoalDto userGoalDto = UserGoalDto.builder()
+                .id(userGoal.getId())
+                .goalDatetime(userGoal.getGoalDatetime())
+                .title(userGoal.getTitle())
+                .icon(userGoal.getIcon())
+                .difficulty(userGoal.getDifficulty())
+                .teamId(userGoal.getTeamId())
+                .categoryId(userGoal.getCategoryId())
+                .verificationMethod(userGoal.getVerificationMethod())
+                .build();
+
+        return ResponseEntity.ok(userGoalDto);
     }
 
     @Operation(summary = "목표 지우기", description = "목표를 삭제합니다.")
