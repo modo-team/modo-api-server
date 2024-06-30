@@ -27,4 +27,26 @@ public class UserGoalService {
         userGoalRepository.save(userGoal);
         return userGoal;
     }
+
+    public UserGoal getUserGoal(Long id) {
+        return userGoalRepository.findById(id).orElseThrow();
+    }
+
+    @Transactional
+    public void deleteUserGoal(Long id) {
+        userGoalRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void updateUserGoal(Long id, UserGoalDto userGoalDto) {
+        UserGoal userGoal = userGoalRepository.findById(id).orElseThrow();
+        userGoal.setTitle(userGoalDto.getTitle());
+        userGoal.setIcon(userGoalDto.getIcon());
+        userGoal.setDifficulty(userGoalDto.getDifficulty());
+        userGoal.setTeamId(userGoalDto.getTeamId());
+        userGoal.setCategoryId(userGoalDto.getCategoryId());
+        userGoal.setVerificationMethod(userGoalDto.getVerificationMethod());
+        userGoal.setGoalDatetime(userGoalDto.getGoalDatetime());
+        userGoalRepository.save(userGoal);
+    }
 }
