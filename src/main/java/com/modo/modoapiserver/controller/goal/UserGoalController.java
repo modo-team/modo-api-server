@@ -45,6 +45,7 @@ public class UserGoalController {
                 .teamId(userGoal.getTeamId())
                 .categoryId(userGoal.getCategoryId())
                 .verificationMethod(userGoal.getVerificationMethod())
+                .userId(userGoal.getUserId())
                 .build();
 
         return ResponseEntity.ok(newUserGoalDto);
@@ -64,6 +65,7 @@ public class UserGoalController {
                 .teamId(userGoal.getTeamId())
                 .categoryId(userGoal.getCategoryId())
                 .verificationMethod(userGoal.getVerificationMethod())
+                .userId(userGoal.getUserId())
                 .build();
 
         return ResponseEntity.ok(userGoalDto);

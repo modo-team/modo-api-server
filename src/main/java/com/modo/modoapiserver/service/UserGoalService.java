@@ -23,6 +23,7 @@ public class UserGoalService {
                 .categoryId(userGoalDto.getCategoryId())
                 .verificationMethod(userGoalDto.getVerificationMethod())
                 .goalDatetime(userGoalDto.getGoalDatetime())
+                .userId(userGoalDto.getUserId())
                 .build();
         userGoalRepository.save(userGoal);
         return userGoal;
