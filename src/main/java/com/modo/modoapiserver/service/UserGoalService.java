@@ -8,6 +8,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Service
 public class UserGoalService {
     @Autowired
@@ -49,5 +52,8 @@ public class UserGoalService {
         userGoal.setVerificationMethod(userGoalDto.getVerificationMethod());
         userGoal.setGoalDatetime(userGoalDto.getGoalDatetime());
         userGoalRepository.save(userGoal);
+    }
+    public List<UserGoal> getUserGoalsBetween(Long userId, LocalDateTime start, LocalDateTime end) {
+        return userGoalRepository.findByUserIdAndGoalDatetimeBetween(userId, start, end);
     }
 }

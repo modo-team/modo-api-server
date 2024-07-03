@@ -4,6 +4,8 @@ import com.modo.modoapiserver.dto.controller.goal.UserGoalResponseDto;
 import com.modo.modoapiserver.dto.controller.goal.UserGoalListResponseDto;
 import com.modo.modoapiserver.dto.controller.goal.UserGoalRequestDto;
 import com.modo.modoapiserver.dto.service.userGoal.UserGoalDto;
+import com.modo.modoapiserver.enums.UserGoalDifficulty;
+import com.modo.modoapiserver.enums.UserGoalStatus;
 import com.modo.modoapiserver.model.UserGoal;
 import com.modo.modoapiserver.security.CustomUserDetails;
 import com.modo.modoapiserver.service.UserGoalService;
@@ -11,10 +13,16 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/user")
@@ -98,58 +106,35 @@ public class UserGoalController {
 
     @Operation(summary = "내 주간 목표 목록 조회", description = "내가 이번주 목표를 조회합니다")
     @GetMapping("/my/challenges")
-    public ResponseEntity<List<UserGoalListResponseDto>> getMyChallengeList() {
-        List<UserGoalListResponseDto> userChallengeList = new ArrayList<>(2);
+    public ResponseEntity<List<UserGoalListResponseDto>> getMyChallengeList(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        LocalDateTime startOfWeek = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime endOfWeek = startOfWeek.plusDays(7).withHour(23).withMinute(59).withSecond(59).withNano(999999999);
+        List<UserGoal> userGoalsThisWeek = this.userGoalService.getUserGoalsBetween(userDetails.getIdentity(), startOfWeek, endOfWeek);
 
-        UserGoalListResponseDto userChallengeListResponseDto = UserGoalListResponseDto.builder()
-                .datetime("2021-10-10")
-                .userChallengeList(new ArrayList<>(2))
+        // 가져온 userGoalsThisWeek 를 년/월/일 을 기준으로 Grouping 해서, UserGoalListResponseDto 를 만들어서 반환한다.
+        Map<LocalDate, List<UserGoalResponseDto>> groupedGoals = userGoalsThisWeek.stream()
+                .collect(Collectors.groupingBy(
+                        userGoal -> userGoal.getGoalDatetime().toLocalDate(),
+                        Collectors.mapping(this::convertToDto, Collectors.toList())
+                ));
+
+        List<UserGoalListResponseDto> response = groupedGoals.entrySet().stream()
+                .map(entry -> UserGoalListResponseDto.builder()
+                        .datetime(entry.getKey().toString())
+                        .userChallengeList(entry.getValue())
+                        .build())
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(response);
+    }
+
+    private UserGoalResponseDto convertToDto(UserGoal userGoal) {
+        return UserGoalResponseDto.builder()
+                .icon(userGoal.getIcon())
+                .title(userGoal.getTitle())
+                .status(UserGoalStatus.fromValue(userGoal.getStatus()))
+                .difficulty(UserGoalDifficulty.fromValue(userGoal.getDifficulty()))
+                .userNickname(userGoal.getUser().getUsername())
                 .build();
-
-        userChallengeListResponseDto.getUserChallengeList().add(
-                UserGoalResponseDto.builder()
-                        .userNickname("두이")
-                        .status("ready")
-                        .title("운동하기")
-                        .difficulty("difficult")
-                        .build()
-        );
-
-        userChallengeListResponseDto.getUserChallengeList().add(
-                UserGoalResponseDto.builder()
-                        .userNickname("두이")
-                        .status("fail")
-                        .title("공부하기")
-                        .difficulty("difficult")
-                        .build()
-        );
-
-        userChallengeList.add(userChallengeListResponseDto);
-
-        userChallengeListResponseDto = UserGoalListResponseDto.builder()
-                .datetime("2021-10-11")
-                .userChallengeList(new ArrayList<>(2))
-                .build();
-
-
-        userChallengeListResponseDto.getUserChallengeList().add(
-                UserGoalResponseDto.builder()
-                        .userNickname("두이")
-                        .status("ready")
-                        .title("운동하기")
-                        .difficulty("difficult")
-                        .build()
-        );
-
-        userChallengeListResponseDto.getUserChallengeList().add(
-                UserGoalResponseDto.builder()
-                        .userNickname("두이")
-                        .status("ready")
-                        .title("공부하기")
-                        .difficulty("difficult")
-                        .build()
-        );
-        userChallengeList.add(userChallengeListResponseDto);
-        return ResponseEntity.ok(userChallengeList);
     }
 }
