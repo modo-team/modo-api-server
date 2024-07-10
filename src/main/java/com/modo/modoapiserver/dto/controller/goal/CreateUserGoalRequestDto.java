@@ -7,9 +7,9 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Schema(description = "사용자 목표 CRUD 요청 스키마")
+@Schema(description = "사용자 목표 생성 요청 스키마. DateTime 을 List 로 받음")
 @Getter
-public class UserGoalRequestDto {
+public class CreateUserGoalRequestDto {
     @Schema(description = "목표 제목", required = true)
     private String title;
 
@@ -32,6 +32,6 @@ public class UserGoalRequestDto {
     private String verificationMethod;
 
     @Schema(description = "목표 날짜", required = true)
-    @JsonProperty("goal_datetime")
-    private LocalDateTime goalDatetime;
+    @JsonProperty("goal_datetime_list")
+    private List<LocalDateTime> goalDatetimeList;
 }

@@ -1,5 +1,6 @@
 package com.modo.modoapiserver.controller.goal;
 
+import com.modo.modoapiserver.dto.controller.goal.CreateUserGoalRequestDto;
 import com.modo.modoapiserver.dto.controller.goal.UserGoalResponseDto;
 import com.modo.modoapiserver.dto.controller.goal.UserGoalListResponseDto;
 import com.modo.modoapiserver.dto.controller.goal.UserGoalRequestDto;
@@ -29,34 +30,40 @@ import java.util.stream.Stream;
 public class UserGoalController {
     @Autowired
     UserGoalService userGoalService;
-    @Operation(summary = "목표 생성하기", description = "목표를 생성합니다")
-    @PostMapping("/goal")
-    public ResponseEntity<UserGoalDto> saveUserGoal(@RequestBody UserGoalRequestDto data, @AuthenticationPrincipal CustomUserDetails userDetails){
-        UserGoalDto userGoalDto = UserGoalDto.builder()
-                .goalDatetime(data.getGoalDatetime())
-                .title(data.getTitle())
-                .icon(data.getIcon())
-                .difficulty(data.getDifficulty())
-                .teamId(data.getTeamId())
-                .categoryId(data.getCategoryId())
-                .verificationMethod(data.getVerificationMethod())
-                .userId(userDetails.getIdentity())
-                .build();
-        UserGoal userGoal = userGoalService.saveUserGoal(userGoalDto);
+    @Operation(summary = "목표 생성하기", description = "목표를 생성합니다. 날짜가 여러개 들어오면 다른 날짜의 같은 목표가 다중으로 생성됩니다.")
+    @PostMapping("/goals")
+    public ResponseEntity<List<UserGoalDto>> saveUserGoal(@RequestBody CreateUserGoalRequestDto data, @AuthenticationPrincipal CustomUserDetails userDetails){
+        List<UserGoal> userGoals = new ArrayList<>();
+        for (LocalDateTime goalDatetime : data.getGoalDatetimeList()) {
+            UserGoalDto userGoalDto = UserGoalDto.builder()
+                    .goalDatetime(goalDatetime)
+                    .title(data.getTitle())
+                    .icon(data.getIcon())
+                    .difficulty(data.getDifficulty())
+                    .teamId(data.getTeamId())
+                    .categoryId(data.getCategoryId())
+                    .verificationMethod(data.getVerificationMethod())
+                    .userId(userDetails.getIdentity())
+                    .status(UserGoalStatus.READY)
+                    .build();
+            userGoals.add(userGoalService.saveUserGoal(userGoalDto));
+        }
 
-        UserGoalDto newUserGoalDto = UserGoalDto.builder()
-                .id(userGoal.getId())
-                .goalDatetime(userGoal.getGoalDatetime())
-                .title(userGoal.getTitle())
-                .icon(userGoal.getIcon())
-                .difficulty(userGoal.getDifficulty())
-                .teamId(userGoal.getTeamId())
-                .categoryId(userGoal.getCategoryId())
-                .verificationMethod(userGoal.getVerificationMethod())
-                .userId(userGoal.getUserId())
-                .build();
+        List<UserGoalDto> userGoalDtoList = userGoals.stream()
+                .map(userGoal -> UserGoalDto.builder()
+                        .id(userGoal.getId())
+                        .goalDatetime(userGoal.getGoalDatetime())
+                        .title(userGoal.getTitle())
+                        .icon(userGoal.getIcon())
+                        .difficulty(userGoal.getDifficulty())
+                        .teamId(userGoal.getTeamId())
+                        .categoryId(userGoal.getCategoryId())
+                        .verificationMethod(userGoal.getVerificationMethod())
+                        .userId(userGoal.getUserId())
+                        .build())
+                .collect(Collectors.toList());
 
-        return ResponseEntity.ok(newUserGoalDto);
+        return ResponseEntity.ok(userGoalDtoList);
     }
 
     @Operation(summary = "목표 상세 가져오기", description = "목표 상세를 가져옵니다")

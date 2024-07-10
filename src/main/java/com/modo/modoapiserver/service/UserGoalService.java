@@ -27,6 +27,7 @@ public class UserGoalService {
                 .verificationMethod(userGoalDto.getVerificationMethod())
                 .goalDatetime(userGoalDto.getGoalDatetime())
                 .userId(userGoalDto.getUserId())
+                .status(userGoalDto.getStatus().getValue())
                 .build();
         userGoalRepository.save(userGoal);
         return userGoal;

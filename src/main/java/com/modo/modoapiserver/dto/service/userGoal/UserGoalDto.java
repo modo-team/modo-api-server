@@ -1,6 +1,7 @@
 package com.modo.modoapiserver.dto.service.userGoal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.modo.modoapiserver.enums.UserGoalStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,4 +29,6 @@ public class UserGoalDto {
     private String verificationMethod;
     @JsonProperty("goal_datetime")
     private LocalDateTime goalDatetime;
+    @JsonProperty("status")
+    private UserGoalStatus status;
 }
