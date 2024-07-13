@@ -17,6 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -55,11 +56,12 @@ public class UserGoalController {
                         .goalDatetime(userGoal.getGoalDatetime())
                         .title(userGoal.getTitle())
                         .icon(userGoal.getIcon())
-                        .difficulty(userGoal.getDifficulty())
+                        .difficulty(UserGoalDifficulty.fromValue(userGoal.getDifficulty()))
                         .teamId(userGoal.getTeamId())
                         .categoryId(userGoal.getCategoryId())
                         .verificationMethod(userGoal.getVerificationMethod())
                         .userId(userGoal.getUserId())
+                        .status(UserGoalStatus.fromValue(userGoal.getStatus()))
                         .build())
                 .collect(Collectors.toList());
 
@@ -76,11 +78,12 @@ public class UserGoalController {
                 .goalDatetime(userGoal.getGoalDatetime())
                 .title(userGoal.getTitle())
                 .icon(userGoal.getIcon())
-                .difficulty(userGoal.getDifficulty())
+                .difficulty(UserGoalDifficulty.fromValue(userGoal.getDifficulty()))
                 .teamId(userGoal.getTeamId())
                 .categoryId(userGoal.getCategoryId())
                 .verificationMethod(userGoal.getVerificationMethod())
                 .userId(userGoal.getUserId())
+                .status(UserGoalStatus.fromValue(userGoal.getStatus()))
                 .build();
 
         return ResponseEntity.ok(userGoalDto);
@@ -106,6 +109,7 @@ public class UserGoalController {
                 .teamId(userGoalRequestDto.getTeamId())
                 .categoryId(userGoalRequestDto.getCategoryId())
                 .verificationMethod(userGoalRequestDto.getVerificationMethod())
+                .status(userGoalRequestDto.getStatus())
                 .build();
         userGoalService.updateUserGoal(id, userGoalDto);
         return ResponseEntity.ok().build();
@@ -114,7 +118,7 @@ public class UserGoalController {
     @Operation(summary = "내 주간 목표 목록 조회", description = "내가 이번주 목표를 조회합니다")
     @GetMapping("/my/challenges")
     public ResponseEntity<List<UserGoalListResponseDto>> getMyChallengeList(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        LocalDateTime startOfWeek = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime startOfWeek = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0).with(DayOfWeek.MONDAY);
         LocalDateTime endOfWeek = startOfWeek.plusDays(7).withHour(23).withMinute(59).withSecond(59).withNano(999999999);
         List<UserGoal> userGoalsThisWeek = this.userGoalService.getUserGoalsBetween(userDetails.getIdentity(), startOfWeek, endOfWeek);
 

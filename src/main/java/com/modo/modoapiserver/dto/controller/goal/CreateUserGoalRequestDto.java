@@ -1,6 +1,7 @@
 package com.modo.modoapiserver.dto.controller.goal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.modo.modoapiserver.enums.UserGoalDifficulty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
@@ -17,7 +18,7 @@ public class CreateUserGoalRequestDto {
     private String icon;
 
     @Schema(description = "목표 난이도. 0: 쉬움, 1: 보통, 2: 어려움, (3: 안하면뒤진다. 추후 추가예정)", required = true)
-    private Integer difficulty;
+    private UserGoalDifficulty difficulty;
 
     @Schema(description = "팀 아이디", required = false)
     @JsonProperty("team_id")

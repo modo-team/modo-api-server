@@ -21,7 +21,7 @@ public class UserGoalService {
         UserGoal userGoal = UserGoal.builder()
                 .title(userGoalDto.getTitle())
                 .icon(userGoalDto.getIcon())
-                .difficulty(userGoalDto.getDifficulty())
+                .difficulty(userGoalDto.getDifficulty().getValue())
                 .teamId(userGoalDto.getTeamId())
                 .categoryId(userGoalDto.getCategoryId())
                 .verificationMethod(userGoalDto.getVerificationMethod())
@@ -47,11 +47,12 @@ public class UserGoalService {
         UserGoal userGoal = userGoalRepository.findById(id).orElseThrow();
         userGoal.setTitle(userGoalDto.getTitle());
         userGoal.setIcon(userGoalDto.getIcon());
-        userGoal.setDifficulty(userGoalDto.getDifficulty());
+        userGoal.setDifficulty(userGoalDto.getDifficulty().getValue());
         userGoal.setTeamId(userGoalDto.getTeamId());
         userGoal.setCategoryId(userGoalDto.getCategoryId());
         userGoal.setVerificationMethod(userGoalDto.getVerificationMethod());
         userGoal.setGoalDatetime(userGoalDto.getGoalDatetime());
+        userGoal.setStatus(userGoalDto.getStatus().getValue());
         userGoalRepository.save(userGoal);
     }
     public List<UserGoal> getUserGoalsBetween(Long userId, LocalDateTime start, LocalDateTime end) {
