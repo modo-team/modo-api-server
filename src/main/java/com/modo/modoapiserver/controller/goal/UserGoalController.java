@@ -158,6 +158,7 @@ public class UserGoalController {
 
     private UserGoalResponseDto convertToDto(UserGoal userGoal) {
         return UserGoalResponseDto.builder()
+                .id(userGoal.getId())
                 .icon(userGoal.getIcon())
                 .title(userGoal.getTitle())
                 .status(UserGoalStatus.fromValue(userGoal.getStatus()))

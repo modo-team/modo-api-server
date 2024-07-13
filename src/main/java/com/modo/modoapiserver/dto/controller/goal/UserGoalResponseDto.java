@@ -9,6 +9,7 @@ import lombok.Getter;
 @Builder
 @Getter
 public class UserGoalResponseDto {
+    private Long id;
     private String icon;
     @JsonProperty("user_nickname")
     private String userNickname;
