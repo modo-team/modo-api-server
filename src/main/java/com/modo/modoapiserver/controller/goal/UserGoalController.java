@@ -12,10 +12,12 @@ import com.modo.modoapiserver.security.CustomUserDetails;
 import com.modo.modoapiserver.service.UserGoalService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -115,12 +117,27 @@ public class UserGoalController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "내 주간 목표 목록 조회", description = "내가 이번주 목표를 조회합니다")
+    @Operation(summary = "내 주간 목표 목록 조회", description = "내가 생성한 이번주 목표를 조회합니다")
     @GetMapping("/my/challenges")
-    public ResponseEntity<List<UserGoalListResponseDto>> getMyChallengeList(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        LocalDateTime startOfWeek = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0).with(DayOfWeek.MONDAY);
-        LocalDateTime endOfWeek = startOfWeek.plusDays(7).withHour(23).withMinute(59).withSecond(59).withNano(999999999);
-        List<UserGoal> userGoalsThisWeek = this.userGoalService.getUserGoalsBetween(userDetails.getIdentity(), startOfWeek, endOfWeek);
+    public ResponseEntity<List<UserGoalListResponseDto>> getMyChallengeList(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+
+            @RequestParam(value="start_date", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            LocalDateTime startDate,
+
+            @RequestParam(value="end_date", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            LocalDateTime endDate) {
+        if( startDate == null && endDate == null) {
+            startDate = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0).with(DayOfWeek.MONDAY);
+            endDate = startDate.plusDays(7).withHour(23).withMinute(59).withSecond(59).withNano(999999999);
+        }
+        else if ( startDate == null || endDate == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"startDate 와 endDate 둘 다 넣거나 둘 다 안 넣어야 합니다.");
+        }
+
+        List<UserGoal> userGoalsThisWeek = this.userGoalService.getUserGoalsBetween(userDetails.getIdentity(), startDate, endDate);
 
         // 가져온 userGoalsThisWeek 를 년/월/일 을 기준으로 Grouping 해서, UserGoalListResponseDto 를 만들어서 반환한다.
         Map<LocalDate, List<UserGoalResponseDto>> groupedGoals = userGoalsThisWeek.stream()
