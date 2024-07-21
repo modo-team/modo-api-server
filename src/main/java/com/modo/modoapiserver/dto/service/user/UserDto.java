@@ -1,5 +1,6 @@
 package com.modo.modoapiserver.dto.service.user;
 
+import com.modo.modoapiserver.enums.Gender;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.util.StringUtils;
@@ -12,14 +13,14 @@ public class UserDto {
     private String username;
     private String mobileNumber;
     private String birth;
-    private String gender;
+    private Gender gender;
     private String externalId;
     private String externalType;
 
     public UserDto() {
     }
 
-    public UserDto(String email, String password, String nickname, String gender, String birth) {
+    public UserDto(String email, String password, String nickname, Gender gender, String birth) {
         this.email = email;
         this.password = password;
         this.username = nickname;
