@@ -1,9 +1,6 @@
 package com.modo.modoapiserver.controller.goal;
 
-import com.modo.modoapiserver.dto.controller.goal.CreateUserGoalRequestDto;
-import com.modo.modoapiserver.dto.controller.goal.UserGoalResponseDto;
-import com.modo.modoapiserver.dto.controller.goal.UserGoalListResponseDto;
-import com.modo.modoapiserver.dto.controller.goal.UserGoalRequestDto;
+import com.modo.modoapiserver.dto.controller.goal.*;
 import com.modo.modoapiserver.dto.service.userGoal.UserGoalDto;
 import com.modo.modoapiserver.enums.UserGoalDifficulty;
 import com.modo.modoapiserver.enums.UserGoalStatus;
@@ -103,17 +100,33 @@ public class UserGoalController {
     @PatchMapping("/goal/{id}")
     public ResponseEntity<?> patchUserGoal(@PathVariable("id") Long id, @RequestBody UserGoalRequestDto userGoalRequestDto){
         // TODO: jwt 토큰에서 사용자 정보를 가져와서 사용자의 목표인지 확인하는 로직 추가
-        UserGoalDto userGoalDto = UserGoalDto.builder()
-                .goalDatetime(userGoalRequestDto.getGoalDatetime())
-                .title(userGoalRequestDto.getTitle())
-                .icon(userGoalRequestDto.getIcon())
-                .difficulty(userGoalRequestDto.getDifficulty())
-                .teamId(userGoalRequestDto.getTeamId())
-                .categoryId(userGoalRequestDto.getCategoryId())
-                .verificationMethod(userGoalRequestDto.getVerificationMethod())
-                .status(userGoalRequestDto.getStatus())
-                .build();
-        userGoalService.updateUserGoal(id, userGoalDto);
+        UserGoal userGoal = userGoalService.getUserGoal(id);
+        if( userGoalRequestDto.getTitle() != null) {
+            userGoal.setTitle(userGoalRequestDto.getTitle());
+        }
+        if( userGoalRequestDto.getIcon() != null) {
+            userGoal.setIcon(userGoalRequestDto.getIcon());
+        }
+        if( userGoalRequestDto.getDifficulty() != null) {
+            userGoal.setDifficulty(userGoalRequestDto.getDifficulty().getValue());
+        }
+        if( userGoalRequestDto.getTeamId() != null) {
+            userGoal.setTeamId(userGoalRequestDto.getTeamId());
+        }
+        if( userGoalRequestDto.getCategoryId() != null) {
+            userGoal.setCategoryId(userGoalRequestDto.getCategoryId());
+        }
+        if( userGoalRequestDto.getVerificationMethod() != null) {
+            userGoal.setVerificationMethod(userGoalRequestDto.getVerificationMethod());
+        }
+        if( userGoalRequestDto.getGoalDatetime() != null) {
+            userGoal.setGoalDatetime(userGoalRequestDto.getGoalDatetime());
+        }
+        if( userGoalRequestDto.getStatus() != null) {
+            userGoal.setStatus(userGoalRequestDto.getStatus().getValue());
+        }
+
+        userGoalService.updateUserGoal(userGoal);
         return ResponseEntity.ok().build();
     }
 
