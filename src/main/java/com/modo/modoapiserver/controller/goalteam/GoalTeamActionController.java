@@ -1,7 +1,10 @@
-package com.modo.modoapiserver.controller.goalTeam;
+package com.modo.modoapiserver.controller.goalteam;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.modo.modoapiserver.dto.controller.goalteam.RequestCreateTeamDto;
+import com.modo.modoapiserver.dto.controller.goalteam.RequestPatchTeamDto;
+import com.modo.modoapiserver.dto.controller.goalteam.ResponseTeamDto;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 
 /// 목표 팀 테이블
@@ -13,17 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/teams")
-public class GoalTeamController {
-    /// # CRUD
-    /// 팀 생성 API
-    /// 팀 제거 API
-    /// 팀 수정 API
-    /// 팀 상세 조회 API
-
-    /// # 리스트 조회
-    /// 팀 목록 조회 API - 최신순
-    /// 팀 목록 조회 API - 인기순
-
+public class GoalTeamActionController {
     /// # 공통 상호작용
     /// 팀 좋아요 API
 
