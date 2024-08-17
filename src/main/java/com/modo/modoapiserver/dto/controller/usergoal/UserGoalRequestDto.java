@@ -1,4 +1,4 @@
-package com.modo.modoapiserver.dto.controller.goal;
+package com.modo.modoapiserver.dto.controller.usergoal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.modo.modoapiserver.enums.UserGoalDifficulty;
@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Schema(description = "사용자 목표 CRUD 요청 스키마")
 @Getter

@@ -1,9 +1,9 @@
-package com.modo.modoapiserver.controller.goal;
+package com.modo.modoapiserver.controller.usergoal;
 
-import com.modo.modoapiserver.dto.controller.goal.CreateUserGoalRequestDto;
-import com.modo.modoapiserver.dto.controller.goal.UserGoalResponseDto;
-import com.modo.modoapiserver.dto.controller.goal.UserGoalListResponseDto;
-import com.modo.modoapiserver.dto.controller.goal.UserGoalRequestDto;
+import com.modo.modoapiserver.dto.controller.usergoal.CreateUserGoalRequestDto;
+import com.modo.modoapiserver.dto.controller.usergoal.UserGoalResponseDto;
+import com.modo.modoapiserver.dto.controller.usergoal.UserGoalListResponseDto;
+import com.modo.modoapiserver.dto.controller.usergoal.UserGoalRequestDto;
 import com.modo.modoapiserver.dto.service.usergoal.UserGoalDto;
 import com.modo.modoapiserver.enums.UserGoalDifficulty;
 import com.modo.modoapiserver.enums.UserGoalStatus;

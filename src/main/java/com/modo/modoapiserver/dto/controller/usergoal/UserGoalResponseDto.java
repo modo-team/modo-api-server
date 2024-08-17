@@ -1,4 +1,4 @@
-package com.modo.modoapiserver.dto.controller.goal;
+package com.modo.modoapiserver.dto.controller.usergoal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.modo.modoapiserver.enums.UserGoalDifficulty;
