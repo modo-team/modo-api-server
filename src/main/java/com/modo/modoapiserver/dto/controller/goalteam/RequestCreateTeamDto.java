@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -14,9 +15,9 @@ import java.time.LocalDateTime;
 public class RequestCreateTeamDto {
     private String name;
     @JsonProperty("start_date")
-    private LocalDateTime startDate;
+    private LocalDate startDate;
     @JsonProperty("end_date")
-    private LocalDateTime endDate;
+    private LocalDate endDate;
     private String description;
     @JsonProperty("applyment_question")
     private String applymentQuestion;
@@ -24,4 +25,6 @@ public class RequestCreateTeamDto {
     private Integer maxMemberNumber;
     @JsonProperty("team_category")
     private TeamCategory teamCategory;
+    @JsonProperty("hashtags")
+    private String hashtags;
 }
