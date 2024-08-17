@@ -4,7 +4,7 @@ import com.modo.modoapiserver.dto.controller.goal.CreateUserGoalRequestDto;
 import com.modo.modoapiserver.dto.controller.goal.UserGoalResponseDto;
 import com.modo.modoapiserver.dto.controller.goal.UserGoalListResponseDto;
 import com.modo.modoapiserver.dto.controller.goal.UserGoalRequestDto;
-import com.modo.modoapiserver.dto.service.userGoal.UserGoalDto;
+import com.modo.modoapiserver.dto.service.usergoal.UserGoalDto;
 import com.modo.modoapiserver.enums.UserGoalDifficulty;
 import com.modo.modoapiserver.enums.UserGoalStatus;
 import com.modo.modoapiserver.model.UserGoal;
