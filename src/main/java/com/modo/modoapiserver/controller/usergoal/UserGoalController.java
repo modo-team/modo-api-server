@@ -1,9 +1,9 @@
 package com.modo.modoapiserver.controller.usergoal;
 
-import com.modo.modoapiserver.dto.controller.usergoal.CreateUserGoalRequestDto;
-import com.modo.modoapiserver.dto.controller.usergoal.UserGoalResponseDto;
-import com.modo.modoapiserver.dto.controller.usergoal.UserGoalListResponseDto;
-import com.modo.modoapiserver.dto.controller.usergoal.UserGoalRequestDto;
+import com.modo.modoapiserver.dto.controller.usergoal.RequestCreateUserGoalDto;
+import com.modo.modoapiserver.dto.controller.usergoal.ResponseUserGoalDto;
+import com.modo.modoapiserver.dto.controller.usergoal.ResponseUserGoalListDto;
+import com.modo.modoapiserver.dto.controller.usergoal.RequestUserGoalDto;
 import com.modo.modoapiserver.dto.service.usergoal.UserGoalDto;
 import com.modo.modoapiserver.enums.UserGoalDifficulty;
 import com.modo.modoapiserver.enums.UserGoalStatus;
@@ -34,7 +34,7 @@ public class UserGoalController {
     UserGoalService userGoalService;
     @Operation(summary = "목표 생성하기", description = "목표를 생성합니다. 날짜가 여러개 들어오면 다른 날짜의 같은 목표가 다중으로 생성됩니다.")
     @PostMapping("/goals")
-    public ResponseEntity<List<UserGoalDto>> saveUserGoal(@RequestBody CreateUserGoalRequestDto data, @AuthenticationPrincipal CustomUserDetails userDetails){
+    public ResponseEntity<List<UserGoalDto>> saveUserGoal(@RequestBody RequestCreateUserGoalDto data, @AuthenticationPrincipal CustomUserDetails userDetails){
         List<UserGoal> userGoals = new ArrayList<>();
         for (LocalDateTime goalDatetime : data.getGoalDatetimeList()) {
             UserGoalDto userGoalDto = UserGoalDto.builder()
@@ -100,17 +100,17 @@ public class UserGoalController {
 
     @Operation(summary = "목표 업데이트", description = "목표를 업데이트합니다.")
     @PatchMapping("/goal/{id}")
-    public ResponseEntity<?> patchUserGoal(@PathVariable("id") Long id, @RequestBody UserGoalRequestDto userGoalRequestDto){
+    public ResponseEntity<?> patchUserGoal(@PathVariable("id") Long id, @RequestBody RequestUserGoalDto requestUserGoalDto){
         // TODO: jwt 토큰에서 사용자 정보를 가져와서 사용자의 목표인지 확인하는 로직 추가
         UserGoalDto userGoalDto = UserGoalDto.builder()
-                .goalDatetime(userGoalRequestDto.getGoalDatetime())
-                .title(userGoalRequestDto.getTitle())
-                .icon(userGoalRequestDto.getIcon())
-                .difficulty(userGoalRequestDto.getDifficulty())
-                .teamId(userGoalRequestDto.getTeamId())
-                .categoryId(userGoalRequestDto.getCategoryId())
-                .verificationMethod(userGoalRequestDto.getVerificationMethod())
-                .status(userGoalRequestDto.getStatus())
+                .goalDatetime(requestUserGoalDto.getGoalDatetime())
+                .title(requestUserGoalDto.getTitle())
+                .icon(requestUserGoalDto.getIcon())
+                .difficulty(requestUserGoalDto.getDifficulty())
+                .teamId(requestUserGoalDto.getTeamId())
+                .categoryId(requestUserGoalDto.getCategoryId())
+                .verificationMethod(requestUserGoalDto.getVerificationMethod())
+                .status(requestUserGoalDto.getStatus())
                 .build();
         userGoalService.updateUserGoal(id, userGoalDto);
         return ResponseEntity.ok().build();
@@ -118,7 +118,7 @@ public class UserGoalController {
 
     @Operation(summary = "내 주간 목표 목록 조회", description = "내가 생성한 이번주 목표를 조회합니다")
     @GetMapping("/my/challenges")
-    public ResponseEntity<List<UserGoalListResponseDto>> getMyChallengeList(
+    public ResponseEntity<List<ResponseUserGoalListDto>> getMyChallengeList(
             @AuthenticationPrincipal CustomUserDetails userDetails,
 
             @RequestParam(value="start_date")
@@ -139,14 +139,14 @@ public class UserGoalController {
         List<UserGoal> userGoalsThisWeek = this.userGoalService.getUserGoalsBetween(userDetails.getIdentity(), startDate, endDate);
 
         // 가져온 userGoalsThisWeek 를 년/월/일 을 기준으로 Grouping 해서, UserGoalListResponseDto 를 만들어서 반환한다.
-        Map<LocalDate, List<UserGoalResponseDto>> groupedGoals = userGoalsThisWeek.stream()
+        Map<LocalDate, List<ResponseUserGoalDto>> groupedGoals = userGoalsThisWeek.stream()
                 .collect(Collectors.groupingBy(
                         userGoal -> userGoal.getGoalDatetime().toLocalDate(),
                         Collectors.mapping(this::convertToDto, Collectors.toList())
                 ));
 
-        List<UserGoalListResponseDto> response = groupedGoals.entrySet().stream()
-                .map(entry -> UserGoalListResponseDto.builder()
+        List<ResponseUserGoalListDto> response = groupedGoals.entrySet().stream()
+                .map(entry -> ResponseUserGoalListDto.builder()
                         .datetime(entry.getKey().toString())
                         .userChallengeList(entry.getValue())
                         .build())
@@ -155,8 +155,8 @@ public class UserGoalController {
         return ResponseEntity.ok(response);
     }
 
-    private UserGoalResponseDto convertToDto(UserGoal userGoal) {
-        return UserGoalResponseDto.builder()
+    private ResponseUserGoalDto convertToDto(UserGoal userGoal) {
+        return ResponseUserGoalDto.builder()
                 .id(userGoal.getId())
                 .icon(userGoal.getIcon())
                 .title(userGoal.getTitle())

@@ -8,9 +8,9 @@ import java.util.List;
 
 @Builder
 @Getter
-public class UserGoalListResponseDto {
+public class ResponseUserGoalListDto {
     @JsonProperty("datetime")
     private String datetime;
     @JsonProperty("user_challenge_list")
-    private List<UserGoalResponseDto> userChallengeList;
+    private List<ResponseUserGoalDto> userChallengeList;
 }

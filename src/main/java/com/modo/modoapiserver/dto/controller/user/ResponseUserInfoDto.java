@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UserInfoResponseDto {
+public class ResponseUserInfoDto {
     @JsonProperty("id")
     private Long id;
 

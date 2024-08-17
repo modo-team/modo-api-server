@@ -2,15 +2,11 @@ package com.modo.modoapiserver.dto.controller.auth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
-
-import java.security.PrivateKey;
 
 @Schema(description = "카카오 로그인/회원가입 요청 스키마")
 @Getter
-public class OauthLoginRequestDto {
+public class RequestOauthLoginDto {
     @Schema(description = "auhtorization code")
     @JsonProperty("code")
     private String code;

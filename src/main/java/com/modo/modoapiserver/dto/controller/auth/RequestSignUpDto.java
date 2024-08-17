@@ -3,7 +3,6 @@ package com.modo.modoapiserver.dto.controller.auth;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.modo.modoapiserver.enums.Gender;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -15,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class SignUpRequestDto {
+public class RequestSignUpDto {
     @Schema(description = "유저이메일")
     @JsonProperty("email")
     @NotBlank

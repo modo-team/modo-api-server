@@ -1,6 +1,6 @@
 package com.modo.modoapiserver.service;
 
-import com.modo.modoapiserver.dto.controller.auth.LoginResponseDto;
+import com.modo.modoapiserver.dto.controller.auth.ResponseLoginDto;
 import com.modo.modoapiserver.dto.service.user.UserDto;
 import com.modo.modoapiserver.model.User;
 import com.modo.modoapiserver.repository.UserRepository;
@@ -44,7 +44,7 @@ public class AuthorizeService{
                 .build();
         return userRepository.save(user);
     }
-    public LoginResponseDto registerExternalUser(String externalId, String externalType){
+    public ResponseLoginDto registerExternalUser(String externalId, String externalType){
         User user = userRepository.findByExternalIdAndExternalType(externalId, externalType)
                 .orElseGet(() -> User.builder()
                         .externalId(externalId)
@@ -57,20 +57,20 @@ public class AuthorizeService{
             userRepository.save(user);
         }
 
-        return LoginResponseDto.builder()
+        return ResponseLoginDto.builder()
                 .id(user.getId())
                 .accessToken(jwtUtil.generateToken(user))
                 .build();
     }
 
-    public LoginResponseDto login(String email, String password) {
+    public ResponseLoginDto login(String email, String password) {
         User user = userRepository.findByEmailAndExternalTypeIsNull(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new IllegalStateException("Invalid credentials");
         }
 
-        return LoginResponseDto.builder()
+        return ResponseLoginDto.builder()
                 .id(user.getId())
                 .accessToken(jwtUtil.generateToken(user))
                 .build();

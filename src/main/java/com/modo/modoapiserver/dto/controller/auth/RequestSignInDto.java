@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class SignInRequestDto {
+public class RequestSignInDto {
     @JsonProperty("email")
     private String email;
 

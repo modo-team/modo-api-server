@@ -2,13 +2,11 @@ package com.modo.modoapiserver.dto.controller.auth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-public class LoginResponseDto {
+public class ResponseLoginDto {
     @JsonProperty("id")
     @Schema(description = "유저 id")
     private Long id;
@@ -23,7 +21,7 @@ public class LoginResponseDto {
 
 
     @Builder
-    public LoginResponseDto(Long id, String accessToken, String codeVerifier) {
+    public ResponseLoginDto(Long id, String accessToken, String codeVerifier) {
         this.id = id;
         this.accessToken = accessToken;
         this.codeVerifier = codeVerifier;
