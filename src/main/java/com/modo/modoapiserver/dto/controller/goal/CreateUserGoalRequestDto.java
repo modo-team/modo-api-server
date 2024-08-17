@@ -20,15 +20,15 @@ public class CreateUserGoalRequestDto {
     @Schema(description = "목표 난이도. 0: 쉬움, 1: 보통, 2: 어려움, (3: 안하면뒤진다. 추후 추가예정)", required = true)
     private UserGoalDifficulty difficulty;
 
-    @Schema(description = "팀 아이디", required = false)
+    @Schema(description = "팀 아이디")
     @JsonProperty("team_id")
     private Long teamId;
 
-    @Schema(description = "카테고리 아이디", required = false)
+    @Schema(description = "카테고리 아이디")
     @JsonProperty("category_id")
     private Long categoryId;
 
-    @Schema(description = "목표 인증 방법", required = false)
+    @Schema(description = "목표 인증 방법")
     @JsonProperty("verification_method")
     private String verificationMethod;
 

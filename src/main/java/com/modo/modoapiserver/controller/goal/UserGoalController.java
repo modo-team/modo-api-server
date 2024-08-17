@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/user")
@@ -122,11 +121,11 @@ public class UserGoalController {
     public ResponseEntity<List<UserGoalListResponseDto>> getMyChallengeList(
             @AuthenticationPrincipal CustomUserDetails userDetails,
 
-            @RequestParam(value="start_date", required = false)
+            @RequestParam(value="start_date")
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             LocalDateTime startDate,
 
-            @RequestParam(value="end_date", required = false)
+            @RequestParam(value="end_date")
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             LocalDateTime endDate) {
         if( startDate == null && endDate == null) {
