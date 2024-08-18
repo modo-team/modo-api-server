@@ -6,6 +6,9 @@ import com.modo.modoapiserver.repository.GoalTeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class GoalTeamService {
     @Autowired
@@ -45,5 +48,24 @@ public class GoalTeamService {
     public GoalTeamDto getTeamById(Long id) {
         GoalTeam goalTeam = goalTeamRepository.findById(id).orElseThrow();
         return convertToDto(goalTeam);
+    }
+
+    public List<GoalTeamDto> getTeamsByNewest() {
+        List<GoalTeam> goalTeams = goalTeamRepository.getTeamsOrderByNewest();
+        List<GoalTeamDto> goalTeamDtos = new ArrayList<>();
+        for (GoalTeam goalTeam : goalTeams) {
+            goalTeamDtos.add(convertToDto(goalTeam));
+        }
+        return goalTeamDtos;
+
+    }
+
+    public List<GoalTeamDto> getTeamsByPopular() {
+        List<GoalTeam> goalTeams = goalTeamRepository.getTeamsOrderByPopular();
+        List<GoalTeamDto> goalTeamDtos = new ArrayList<>();
+        for (GoalTeam goalTeam : goalTeams) {
+            goalTeamDtos.add(convertToDto(goalTeam));
+        }
+        return goalTeamDtos;
     }
 }

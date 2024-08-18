@@ -84,7 +84,19 @@ public class GoalTeamController {
     /// 팀 목록 조회 API - 인기순
     @GetMapping()
     public List<ResponseTeamDto> getTeams(@RequestParam("order")OrderValue orderValue){
-        return new ArrayList<ResponseTeamDto>(2);
+        List<GoalTeamDto> goalTeamDtos = new ArrayList<>();
+        if(orderValue == OrderValue.NEWEST){
+            goalTeamDtos = goalTeamService.getTeamsByNewest();
+        }else if(orderValue == OrderValue.POPULAR){
+            goalTeamDtos = goalTeamService.getTeamsByPopular();
+        }
+
+        List<ResponseTeamDto> responseTeamDtos = new ArrayList<>();
+        for(GoalTeamDto goalTeamDto : goalTeamDtos){
+            responseTeamDtos.add(convertToResponseTeamDto(goalTeamDto));
+        }
+
+        return responseTeamDtos;
     }
 
 }
