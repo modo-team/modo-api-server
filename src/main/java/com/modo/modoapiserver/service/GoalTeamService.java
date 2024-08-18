@@ -11,6 +11,13 @@ public class GoalTeamService {
     @Autowired
     GoalTeamRepository goalTeamRepository;
 
+    private GoalTeamDto convertToDto(GoalTeam goalTeam) {
+        return GoalTeamDto.builder().id(goalTeam.getId()).name(goalTeam.getName()).startDate(goalTeam.getStartDate())
+                .endDate(goalTeam.getEndDate()).description(goalTeam.getDescription())
+                .applymentQuestion(goalTeam.getApplymentQuestion()).maxMemberNumber(goalTeam.getMaxMemberNumber())
+                .teamCategory(goalTeam.getTeamCategory()).build();
+    }
+
     public GoalTeamDto createTeam(GoalTeamDto goalTeamDto) {
         GoalTeam goalTeam = GoalTeam.builder().teamCategory(goalTeamDto.getTeamCategory())
                 .description(goalTeamDto.getDescription()).endDate(goalTeamDto.getEndDate()).id(goalTeamDto.getId())
@@ -18,10 +25,7 @@ public class GoalTeamService {
                 .startDate(goalTeamDto.getStartDate()).build();
         goalTeamRepository.save(goalTeam);
 
-        return GoalTeamDto.builder().id(goalTeam.getId()).name(goalTeam.getName()).startDate(goalTeam.getStartDate())
-                .endDate(goalTeam.getEndDate()).description(goalTeam.getDescription())
-                .applymentQuestion(goalTeam.getApplymentQuestion()).maxMemberNumber(goalTeam.getMaxMemberNumber())
-                .teamCategory(goalTeam.getTeamCategory()).build();
+        return convertToDto(goalTeam);
     }
 
     public void deleteTeamById(Long id) {
@@ -35,9 +39,11 @@ public class GoalTeamService {
                 .startDate(goalTeamDto.getStartDate()).build();
         goalTeamRepository.save(goalTeam);
 
-        return GoalTeamDto.builder().id(goalTeam.getId()).name(goalTeam.getName()).startDate(goalTeam.getStartDate())
-                .endDate(goalTeam.getEndDate()).description(goalTeam.getDescription())
-                .applymentQuestion(goalTeam.getApplymentQuestion()).maxMemberNumber(goalTeam.getMaxMemberNumber())
-                .teamCategory(goalTeam.getTeamCategory()).build();
+        return convertToDto(goalTeam);
+    }
+
+    public GoalTeamDto getTeamById(Long id) {
+        GoalTeam goalTeam = goalTeamRepository.findById(id).orElseThrow();
+        return convertToDto(goalTeam);
     }
 }

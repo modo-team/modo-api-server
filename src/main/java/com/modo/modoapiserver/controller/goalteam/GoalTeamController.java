@@ -19,7 +19,20 @@ import java.util.List;
 public class GoalTeamController {
     @Autowired
     private GoalTeamService goalTeamService;
-    /// # CRUD
+
+    private ResponseTeamDto convertToResponseTeamDto(GoalTeamDto goalTeamDto){
+        return ResponseTeamDto.builder().
+                id(goalTeamDto.getId()).
+                teamCategory(goalTeamDto.getTeamCategory()).
+                applymentQuestion(goalTeamDto.getApplymentQuestion()).
+                description(goalTeamDto.getDescription()).
+                startDate(goalTeamDto.getStartDate()).
+                endDate(goalTeamDto.getEndDate()).
+                maxMemberNumber(goalTeamDto.getMaxMemberNumber()).
+                name(goalTeamDto.getName()).
+                build();
+    }
+
     /// 팀 생성 API
     @PostMapping()
     public ResponseTeamDto createTeam(@RequestBody RequestCreateTeamDto requestCreateTeamDto){
@@ -31,33 +44,39 @@ public class GoalTeamController {
                 startDate(requestCreateTeamDto.getStartDate()).build();
 
         GoalTeamDto createdGoalTeamDto = goalTeamService.createTeam(goalTeamDto);
-        return ResponseTeamDto.builder().
-                    description(createdGoalTeamDto.getDescription()).
-                    endDate(createdGoalTeamDto.getEndDate()).
-                    maxMemberNumber(createdGoalTeamDto.getMaxMemberNumber()).
-                    name(createdGoalTeamDto.getName()).
-                    startDate(createdGoalTeamDto.getStartDate()).build();
+        return convertToResponseTeamDto(createdGoalTeamDto);
     }
 
     /// 팀 제거 API
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteTeam(@PathVariable("id") Integer id){
+    public ResponseEntity<?> deleteTeam(@PathVariable("id") Long id){
+        goalTeamService.deleteTeamById(id);
         return ResponseEntity.ok().build();
     }
 
     /// 팀 수정 API
     @PatchMapping("/{id}")
-    public ResponseTeamDto patchTeam(@PathVariable("id") Integer id, @RequestBody RequestPatchTeamDto requestPatchTeamDto){
-        return ResponseTeamDto.
-                builder().
-                description("test").name("test").build();
+    public ResponseTeamDto patchTeam(@PathVariable("id") Long id, @RequestBody RequestPatchTeamDto requestPatchTeamDto){
+        GoalTeamDto goalTeamDto = GoalTeamDto.builder().
+                teamCategory(requestPatchTeamDto.getTeamCategory()).
+                description(requestPatchTeamDto.getDescription()).
+                startDate(requestPatchTeamDto.getStartDate()).
+                endDate(requestPatchTeamDto.getEndDate()).
+                maxMemberNumber(requestPatchTeamDto.getMaxMemberNumber()).
+                name(requestPatchTeamDto.getName()).
+                id(id).
+                build();
+        GoalTeamDto updatedGoalTeamdto = goalTeamService.updateTeam(goalTeamDto);
+
+        return convertToResponseTeamDto(updatedGoalTeamdto);
     }
 
 
     /// 팀 상세 조회 API
     @GetMapping("/{id}")
-    public ResponseTeamDto patchTeam(@PathVariable("id") Integer id){
-        return ResponseTeamDto.builder().id(id).description("team").build();
+    public ResponseTeamDto getTeam(@PathVariable("id") Long id){
+        GoalTeamDto goalTeamDto = goalTeamService.getTeamById(id);
+        return convertToResponseTeamDto(goalTeamDto);
     }
 
     /// # 리스트 조회

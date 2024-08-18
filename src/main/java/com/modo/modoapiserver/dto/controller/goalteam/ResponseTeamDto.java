@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 public class ResponseTeamDto {
-    private Integer id;
+    private Long id;
     private String name;
     @JsonProperty("start_date")
     private LocalDate startDate;
