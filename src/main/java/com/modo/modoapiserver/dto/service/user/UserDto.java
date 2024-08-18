@@ -1,12 +1,14 @@
 package com.modo.modoapiserver.dto.service.user;
 
 import com.modo.modoapiserver.enums.Gender;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.util.StringUtils;
 
 @Getter
 @Setter
+@Builder
 public class UserDto {
     private String email;
     private String password;

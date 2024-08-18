@@ -1,6 +1,8 @@
 package com.modo.modoapiserver.controller.user;
 
+import com.modo.modoapiserver.dto.controller.user.RequestUserInfoUpdateDto;
 import com.modo.modoapiserver.dto.controller.user.ResponseUserInfoDto;
+import com.modo.modoapiserver.dto.service.user.UserDto;
 import com.modo.modoapiserver.model.User;
 import com.modo.modoapiserver.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,9 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -31,5 +31,26 @@ public class UserController {
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+    }
+
+    @Operation(summary = "사용자 정보 업데이트",
+            description = "유저의 주요 정보를 업데이트합니다. 카카오 로그인시에 사용자 정보가 넘어오지 않는 경우, 이 API를 통해 사용자 정보를 업데이트합니다")
+    @PutMapping("/users")
+    public ResponseUserInfoDto updateUserInfo(@AuthenticationPrincipal UserDetails userDetails, @RequestBody RequestUserInfoUpdateDto requestUpdateUserInfoDto){
+        Long userId = Long.parseLong(userDetails.getUsername());
+        UserDto userDto = UserDto.builder()
+                .username(requestUpdateUserInfoDto.getUserName())
+                .birth(requestUpdateUserInfoDto.getUserBirth().toString())
+                .email(requestUpdateUserInfoDto.getUserEmail())
+                .gender(requestUpdateUserInfoDto.getUserGender())
+                .build();
+        User user = userService.updateUserInfo(userId, userDto);
+        return ResponseUserInfoDto.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .name(user.getUsername())
+                .birth(user.getBirth())
+                .gender(user.getGender())
+                .build();
     }
 }
