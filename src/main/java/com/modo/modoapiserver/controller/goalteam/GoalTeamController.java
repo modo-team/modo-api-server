@@ -6,6 +6,7 @@ import com.modo.modoapiserver.dto.controller.goalteam.ResponseTeamDto;
 import com.modo.modoapiserver.dto.service.goalteam.GoalTeamDto;
 import com.modo.modoapiserver.enums.OrderValue;
 import com.modo.modoapiserver.service.GoalTeamService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +35,8 @@ public class GoalTeamController {
     }
 
     /// 팀 생성 API
+    @Operation(summary = "팀 생성 API",
+            description = "팀을 생성합니다.")
     @PostMapping()
     public ResponseTeamDto createTeam(@RequestBody RequestCreateTeamDto requestCreateTeamDto){
         GoalTeamDto goalTeamDto = GoalTeamDto.builder().
@@ -48,6 +51,8 @@ public class GoalTeamController {
     }
 
     /// 팀 제거 API
+    @Operation(summary = "팀 제거 API",
+            description = "팀을 제거합니다.")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTeam(@PathVariable("id") Long id){
         goalTeamService.deleteTeamById(id);
@@ -55,6 +60,8 @@ public class GoalTeamController {
     }
 
     /// 팀 수정 API
+    @Operation(summary = "팀 수정 API",
+            description = "팀을 수정합니다.")
     @PatchMapping("/{id}")
     public ResponseTeamDto patchTeam(@PathVariable("id") Long id, @RequestBody RequestPatchTeamDto requestPatchTeamDto){
         GoalTeamDto goalTeamDto = GoalTeamDto.builder().
@@ -73,6 +80,8 @@ public class GoalTeamController {
 
 
     /// 팀 상세 조회 API
+    @Operation(summary = "팀 상세 조회 API",
+            description = "팀 상세 정보를 조회합니다.")
     @GetMapping("/{id}")
     public ResponseTeamDto getTeam(@PathVariable("id") Long id){
         GoalTeamDto goalTeamDto = goalTeamService.getTeamById(id);
@@ -82,6 +91,8 @@ public class GoalTeamController {
     /// # 리스트 조회
     /// 팀 목록 조회 API - 최신순
     /// 팀 목록 조회 API - 인기순
+    @Operation(summary = "팀 목록 조회 API",
+            description = "팀 목록을 조회합니다.")
     @GetMapping()
     public List<ResponseTeamDto> getTeams(@RequestParam("order")OrderValue orderValue){
         List<GoalTeamDto> goalTeamDtos = new ArrayList<>();
