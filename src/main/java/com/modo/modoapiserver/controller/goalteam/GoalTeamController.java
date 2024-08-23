@@ -64,15 +64,30 @@ public class GoalTeamController {
             description = "팀을 수정합니다.")
     @PatchMapping("/{id}")
     public ResponseTeamDto patchTeam(@PathVariable("id") Long id, @RequestBody RequestPatchTeamDto requestPatchTeamDto){
-        GoalTeamDto goalTeamDto = GoalTeamDto.builder().
-                teamCategory(requestPatchTeamDto.getTeamCategory()).
-                description(requestPatchTeamDto.getDescription()).
-                startDate(requestPatchTeamDto.getStartDate()).
-                endDate(requestPatchTeamDto.getEndDate()).
-                maxMemberNumber(requestPatchTeamDto.getMaxMemberNumber()).
-                name(requestPatchTeamDto.getName()).
-                id(id).
-                build();
+        GoalTeamDto goalTeamDto = this.goalTeamService.getTeamById(id);
+
+        if(requestPatchTeamDto.getDescription() != null){
+            goalTeamDto.setDescription(requestPatchTeamDto.getDescription());
+        }
+        if(requestPatchTeamDto.getEndDate() != null){
+            goalTeamDto.setEndDate(requestPatchTeamDto.getEndDate());
+        }
+        if(requestPatchTeamDto.getMaxMemberNumber() != null){
+            goalTeamDto.setMaxMemberNumber(requestPatchTeamDto.getMaxMemberNumber());
+        }
+        if(requestPatchTeamDto.getName() != null){
+            goalTeamDto.setName(requestPatchTeamDto.getName());
+        }
+        if(requestPatchTeamDto.getStartDate() != null){
+            goalTeamDto.setStartDate(requestPatchTeamDto.getStartDate());
+        }
+        if(requestPatchTeamDto.getTeamCategory() != null){
+            goalTeamDto.setTeamCategory(requestPatchTeamDto.getTeamCategory());
+        }
+        if(requestPatchTeamDto.getApplymentQuestion() != null){
+            goalTeamDto.setApplymentQuestion(requestPatchTeamDto.getApplymentQuestion());
+        }
+
         GoalTeamDto updatedGoalTeamdto = goalTeamService.updateTeam(goalTeamDto);
 
         return convertToResponseTeamDto(updatedGoalTeamdto);

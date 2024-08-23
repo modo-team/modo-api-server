@@ -36,10 +36,13 @@ public class GoalTeamService {
     }
 
     public GoalTeamDto updateTeam(GoalTeamDto goalTeamDto) {
-        GoalTeam goalTeam = GoalTeam.builder().teamCategory(goalTeamDto.getTeamCategory())
-                .description(goalTeamDto.getDescription()).endDate(goalTeamDto.getEndDate()).id(goalTeamDto.getId())
-                .maxMemberNumber(goalTeamDto.getMaxMemberNumber()).name(goalTeamDto.getName())
-                .startDate(goalTeamDto.getStartDate()).build();
+        GoalTeam goalTeam = this.goalTeamRepository.findById(goalTeamDto.getId()).orElseThrow();
+        goalTeam.setTeamCategory(goalTeamDto.getTeamCategory());
+        goalTeam.setDescription(goalTeamDto.getDescription());
+        goalTeam.setEndDate(goalTeamDto.getEndDate());
+        goalTeam.setMaxMemberNumber(goalTeamDto.getMaxMemberNumber());
+        goalTeam.setName(goalTeamDto.getName());
+        goalTeam.setStartDate(goalTeamDto.getStartDate());
         goalTeamRepository.save(goalTeam);
 
         return convertToDto(goalTeam);
