@@ -102,17 +102,33 @@ public class UserGoalController {
     @PatchMapping("/goal/{id}")
     public ResponseEntity<?> patchUserGoal(@PathVariable("id") Long id, @RequestBody RequestUserGoalDto requestUserGoalDto){
         // TODO: jwt 토큰에서 사용자 정보를 가져와서 사용자의 목표인지 확인하는 로직 추가
-        UserGoalDto userGoalDto = UserGoalDto.builder()
-                .goalDatetime(requestUserGoalDto.getGoalDatetime())
-                .title(requestUserGoalDto.getTitle())
-                .icon(requestUserGoalDto.getIcon())
-                .difficulty(requestUserGoalDto.getDifficulty())
-                .teamId(requestUserGoalDto.getTeamId())
-                .categoryId(requestUserGoalDto.getCategoryId())
-                .verificationMethod(requestUserGoalDto.getVerificationMethod())
-                .status(requestUserGoalDto.getStatus())
-                .build();
-        userGoalService.updateUserGoal(id, userGoalDto);
+        UserGoal userGoal = userGoalService.getUserGoal(id);
+        if( requestUserGoalDto.getTitle() != null) {
+            userGoal.setTitle(requestUserGoalDto.getTitle());
+        }
+        if( requestUserGoalDto.getIcon() != null) {
+            userGoal.setIcon(requestUserGoalDto.getIcon());
+        }
+        if( requestUserGoalDto.getDifficulty() != null) {
+            userGoal.setDifficulty(requestUserGoalDto.getDifficulty().getValue());
+        }
+        if( requestUserGoalDto.getTeamId() != null) {
+            userGoal.setTeamId(requestUserGoalDto.getTeamId());
+        }
+        if( requestUserGoalDto.getCategoryId() != null) {
+            userGoal.setCategoryId(requestUserGoalDto.getCategoryId());
+        }
+        if( requestUserGoalDto.getVerificationMethod() != null) {
+            userGoal.setVerificationMethod(requestUserGoalDto.getVerificationMethod());
+        }
+        if( requestUserGoalDto.getGoalDatetime() != null) {
+            userGoal.setGoalDatetime(requestUserGoalDto.getGoalDatetime());
+        }
+        if( requestUserGoalDto.getStatus() != null) {
+            userGoal.setStatus(requestUserGoalDto.getStatus().getValue());
+        }
+
+        userGoalService.updateUserGoal(userGoal);
         return ResponseEntity.ok().build();
     }
 

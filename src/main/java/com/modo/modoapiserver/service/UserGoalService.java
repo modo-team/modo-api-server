@@ -54,6 +54,10 @@ public class UserGoalService {
         userGoal.setStatus(userGoalDto.getStatus().getValue());
         userGoalRepository.save(userGoal);
     }
+    @Transactional
+    public void updateUserGoal(UserGoal userGoal) {
+        userGoalRepository.save(userGoal);
+    }
     public List<UserGoal> getUserGoalsBetween(Long userId, LocalDateTime start, LocalDateTime end) {
         return userGoalRepository.findByUserIdAndGoalDatetimeBetween(userId, start, end);
     }
