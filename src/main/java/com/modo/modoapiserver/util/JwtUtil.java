@@ -1,6 +1,7 @@
 package com.modo.modoapiserver.util;
 
 import com.modo.modoapiserver.model.User;
+import com.modo.modoapiserver.security.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -42,15 +43,14 @@ public class JwtUtil {
         return claims.getSubject().equals(user.getEmail());
     }
 
-    public boolean validateToken(String token, UserDetails user) {
+    public boolean validateToken(String token, CustomUserDetails user) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        Object identity = claims.get("identity");
-
-        return identity.equals(Integer.parseInt(user.getUsername()));
+        Long identity = this.getIdentityFromToken(token);
+        return identity.equals(user.getIdentity());
     }
 
     public String getEmailFromToken(String token) {

@@ -5,10 +5,12 @@ import com.modo.modoapiserver.dto.controller.goalteam.RequestPatchTeamDto;
 import com.modo.modoapiserver.dto.controller.goalteam.ResponseTeamDto;
 import com.modo.modoapiserver.dto.service.goalteam.GoalTeamDto;
 import com.modo.modoapiserver.enums.OrderValue;
+import com.modo.modoapiserver.security.CustomUserDetails;
 import com.modo.modoapiserver.service.GoalTeamService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -38,7 +40,10 @@ public class GoalTeamController {
     @Operation(summary = "팀 생성 API",
             description = "팀을 생성합니다.")
     @PostMapping()
-    public ResponseTeamDto createTeam(@RequestBody RequestCreateTeamDto requestCreateTeamDto){
+    public ResponseTeamDto createTeam(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody RequestCreateTeamDto requestCreateTeamDto
+    ){
         GoalTeamDto goalTeamDto = GoalTeamDto.builder().
                 description(requestCreateTeamDto.getDescription()).
                 endDate(requestCreateTeamDto.getEndDate()).
