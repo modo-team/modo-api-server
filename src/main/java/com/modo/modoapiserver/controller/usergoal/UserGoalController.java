@@ -137,11 +137,11 @@ public class UserGoalController {
     public ResponseEntity<List<ResponseUserGoalListDto>> getMyChallengeList(
             @AuthenticationPrincipal CustomUserDetails userDetails,
 
-            @RequestParam(value="start_date")
+            @RequestParam(value="start_date", required = true)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             LocalDateTime startDate,
 
-            @RequestParam(value="end_date")
+            @RequestParam(value="end_date", required = true)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             LocalDateTime endDate) {
         if( startDate == null && endDate == null) {
