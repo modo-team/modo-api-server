@@ -49,7 +49,10 @@ public class GoalTeamController {
                 endDate(requestCreateTeamDto.getEndDate()).
                 maxMemberNumber(requestCreateTeamDto.getMaxMemberNumber()).
                 name(requestCreateTeamDto.getName()).
-                startDate(requestCreateTeamDto.getStartDate()).build();
+                startDate(requestCreateTeamDto.getStartDate()).
+                teamCategory(requestCreateTeamDto.getTeamCategory()).
+                applymentQuestion(requestCreateTeamDto.getApplymentQuestion()).
+                build();
 
         GoalTeamDto createdGoalTeamDto = goalTeamService.createTeam(goalTeamDto);
         return convertToResponseTeamDto(createdGoalTeamDto);
@@ -98,7 +101,6 @@ public class GoalTeamController {
         return convertToResponseTeamDto(updatedGoalTeamdto);
     }
 
-
     /// 팀 상세 조회 API
     @Operation(summary = "팀 상세 조회 API",
             description = "팀 상세 정보를 조회합니다.")
@@ -116,9 +118,9 @@ public class GoalTeamController {
     @GetMapping()
     public List<ResponseTeamDto> getTeams(@RequestParam("order")OrderValue orderValue){
         List<GoalTeamDto> goalTeamDtos = new ArrayList<>();
-        if(orderValue == OrderValue.NEWEST){
+        if(orderValue.equals(OrderValue.NEWEST)){
             goalTeamDtos = goalTeamService.getTeamsByNewest();
-        }else if(orderValue == OrderValue.POPULAR){
+        }else if(orderValue.equals(OrderValue.POPULAR)){
             goalTeamDtos = goalTeamService.getTeamsByPopular();
         }
 
@@ -130,4 +132,6 @@ public class GoalTeamController {
         return responseTeamDtos;
     }
 
+    /// 내가 좋아요한 팀 목록
+    ///
 }

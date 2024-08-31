@@ -22,10 +22,15 @@ public class GoalTeamService {
     }
 
     public GoalTeamDto createTeam(GoalTeamDto goalTeamDto) {
-        GoalTeam goalTeam = GoalTeam.builder().teamCategory(goalTeamDto.getTeamCategory())
-                .description(goalTeamDto.getDescription()).endDate(goalTeamDto.getEndDate()).id(goalTeamDto.getId())
-                .maxMemberNumber(goalTeamDto.getMaxMemberNumber()).name(goalTeamDto.getName())
-                .startDate(goalTeamDto.getStartDate()).build();
+        GoalTeam goalTeam = GoalTeam.builder().
+                teamCategory(goalTeamDto.getTeamCategory()).
+                description(goalTeamDto.getDescription()).
+                maxMemberNumber(goalTeamDto.getMaxMemberNumber()).
+                name(goalTeamDto.getName()).
+                startDate(goalTeamDto.getStartDate()).
+                endDate(goalTeamDto.getEndDate()).
+                applymentQuestion(goalTeamDto.getApplymentQuestion()).
+                build();
         goalTeamRepository.save(goalTeam);
 
         return convertToDto(goalTeam);
@@ -70,5 +75,11 @@ public class GoalTeamService {
             goalTeamDtos.add(convertToDto(goalTeam));
         }
         return goalTeamDtos;
+    }
+
+    public void joinTeam(Long teamId, Long userId) {
+        GoalTeam goalTeam = goalTeamRepository.findById(teamId).orElseThrow();
+
+        goalTeamRepository.save(goalTeam);
     }
 }

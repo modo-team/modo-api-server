@@ -8,13 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-/// 목표 팀 테이블
-/// 목표 팀 - 유저 연관 테이블
-/// 목표 - 목표 팀 연관 테이블
-/// 목표 팀 카테고리 Enum
-/// 목표 팀 좋아요 테이블
-
-
 @RestController
 @RequestMapping("/api/teams")
 public class GoalTeamActionController {
@@ -32,6 +25,7 @@ public class GoalTeamActionController {
             description = "목표 팀에 좋아요를 취소할때 호출합니다.")
     @DeleteMapping("/{teamId}/like")
     public ResponseEntity<?> unlikeTeam(@PathVariable("teamId") Long teamId) {
+
         return ResponseEntity.ok().build();
     }
 
@@ -41,6 +35,7 @@ public class GoalTeamActionController {
             description = "목표 팀에서 나갈때 호출합니다.")
     @DeleteMapping("/{teamId}/member")
     public ResponseEntity<?> leaveTeam(@PathVariable("teamId") Long teamId) {
+
         return ResponseEntity.ok().build();
     }
 
@@ -49,6 +44,7 @@ public class GoalTeamActionController {
             description = "목표 팀에 참가신청할때 호출합니다.")
     @PostMapping("/{teamId}/apply")
     public ResponseEntity<?> applyTeam(@PathVariable("teamId") Long teamId) {
+
         return ResponseEntity.ok().build();
     }
 

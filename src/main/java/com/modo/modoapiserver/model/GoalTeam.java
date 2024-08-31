@@ -3,8 +3,10 @@ package com.modo.modoapiserver.model;
 import com.modo.modoapiserver.enums.TeamCategory;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name="goal_team")
@@ -43,7 +45,8 @@ public class GoalTeam {
     private Integer maxMemberNumber;
     @Enumerated(EnumType.STRING)
     private TeamCategory teamCategory;
-    private Boolean isDeleted;
-    private String createdAt;
-    private String updatedAt;
+    @Builder.Default
+    private Boolean isDeleted = true;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }
