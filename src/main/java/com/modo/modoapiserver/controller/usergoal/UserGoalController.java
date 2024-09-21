@@ -1,5 +1,6 @@
 package com.modo.modoapiserver.controller.usergoal;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.modo.modoapiserver.dto.controller.usergoal.RequestCreateUserGoalDto;
 import com.modo.modoapiserver.dto.controller.usergoal.ResponseUserGoalDto;
 import com.modo.modoapiserver.dto.controller.usergoal.ResponseUserGoalListDto;
@@ -17,8 +18,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -31,7 +34,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/user")
 public class UserGoalController {
     @Autowired
-    UserGoalService userGoalService;
+    private UserGoalService userGoalService;
+
+    @Autowired
+    private AmazonS3 s3Client;
+
     @Operation(summary = "목표 생성하기", description = "목표를 생성합니다. 날짜가 여러개 들어오면 다른 날짜의 같은 목표가 다중으로 생성됩니다.")
     @PostMapping("/goals")
     public ResponseEntity<List<UserGoalDto>> saveUserGoal(@RequestBody RequestCreateUserGoalDto data, @AuthenticationPrincipal CustomUserDetails userDetails){
@@ -180,5 +187,23 @@ public class UserGoalController {
                 .difficulty(UserGoalDifficulty.fromValue(userGoal.getDifficulty()))
                 .userNickname(userGoal.getUser().getUsername())
                 .build();
+    }
+
+    @PostMapping("/goals/{id}/complete")
+    public ResponseEntity<?> completeUserGoal(
+            @PathVariable("id") Long id,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestPart("file") MultipartFile file
+    ) throws IOException {
+        UserGoal userGoal = userGoalService.getUserGoal(id);
+
+        String bucketName = "modo-user-goal";
+        String fileName = file.getOriginalFilename();
+        this.s3Client.putObject(bucketName, fileName, file.getInputStream(), null);
+
+        userGoal.setStatus(UserGoalStatus.SUCCESS.getValue());
+        userGoalService.updateUserGoal(userGoal);
+
+        return ResponseEntity.ok().build();
     }
 }
