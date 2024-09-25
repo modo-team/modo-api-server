@@ -197,11 +197,13 @@ public class UserGoalController {
     ) throws IOException {
         UserGoal userGoal = userGoalService.getUserGoal(id);
 
-        String bucketName = "modo-user-goal";
+        String bucketName = "modo-static-bucket";
         String fileName = file.getOriginalFilename();
         this.s3Client.putObject(bucketName, fileName, file.getInputStream(), null);
 
         userGoal.setStatus(UserGoalStatus.SUCCESS.getValue());
+        userGoal.setCompleteVerificationPictureUrl(fileName);
+
         userGoalService.updateUserGoal(userGoal);
 
         return ResponseEntity.ok().build();

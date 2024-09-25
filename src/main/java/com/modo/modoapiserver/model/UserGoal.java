@@ -47,6 +47,9 @@ public class UserGoal {
     @Column(name = "goal_datetime")
     private LocalDateTime goalDatetime;
 
+    @Column(name = "complete_verification_picture_url")
+    private String completeVerificationPictureUrl;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -54,5 +57,4 @@ public class UserGoal {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
-
 }
