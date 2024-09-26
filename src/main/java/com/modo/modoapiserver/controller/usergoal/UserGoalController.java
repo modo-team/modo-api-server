@@ -198,7 +198,10 @@ public class UserGoalController {
         UserGoal userGoal = userGoalService.getUserGoal(id);
 
         String bucketName = "modo-static-bucket";
-        String fileName = file.getOriginalFilename();
+        String fileExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+        String fileName = """
+                %s_%s.%s
+                """.formatted(id, System.currentTimeMillis(), fileExtension);
         this.s3Client.putObject(bucketName, fileName, file.getInputStream(), null);
 
         userGoal.setStatus(UserGoalStatus.SUCCESS.getValue());
