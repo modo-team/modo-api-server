@@ -11,6 +11,13 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class S3Config {
+    @Value("${app.user-goal-bucket-name}")
+    private String userGoalBucketName;
+
+    public String getUserGoalBucketName() {
+        return userGoalBucketName;
+    }
+
     @Bean
     public AmazonS3 s3Client() {
         AmazonS3 s3Client = AmazonS3ClientBuilder.standard()

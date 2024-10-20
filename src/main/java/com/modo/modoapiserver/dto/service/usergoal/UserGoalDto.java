@@ -32,4 +32,6 @@ public class UserGoalDto {
     private LocalDateTime goalDatetime;
     @JsonProperty("status")
     private UserGoalStatus status;
+    @JsonProperty("complete_verification_picture_url")
+    private String completeVerificationPictureUrl;
 }

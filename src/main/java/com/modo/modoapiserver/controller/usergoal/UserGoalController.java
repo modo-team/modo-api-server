@@ -1,6 +1,10 @@
 package com.modo.modoapiserver.controller.usergoal;
 
+import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import com.amazonaws.services.s3.model.PutObjectResult;
+import com.modo.modoapiserver.config.S3Config;
 import com.modo.modoapiserver.dto.controller.usergoal.RequestCreateUserGoalDto;
 import com.modo.modoapiserver.dto.controller.usergoal.ResponseUserGoalDto;
 import com.modo.modoapiserver.dto.controller.usergoal.ResponseUserGoalListDto;
@@ -22,10 +26,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.net.URL;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -38,6 +44,9 @@ public class UserGoalController {
 
     @Autowired
     private AmazonS3 s3Client;
+
+    @Autowired
+    private S3Config s3Config;
 
     @Operation(summary = "목표 생성하기", description = "목표를 생성합니다. 날짜가 여러개 들어오면 다른 날짜의 같은 목표가 다중으로 생성됩니다.")
     @PostMapping("/goals")
@@ -81,6 +90,16 @@ public class UserGoalController {
     public ResponseEntity<UserGoalDto> getUserGoal(@PathVariable("id") Long id){
         // TODO: jwt 토큰에서 사용자 정보를 가져와서 사용자의 목표인지 확인하는 로직 추가
         UserGoal userGoal = userGoalService.getUserGoal(id);
+
+        Date expiration = new Date(System.currentTimeMillis() + 1000 * 60 * 60);
+
+        URL presignedUrl = this.s3Client.generatePresignedUrl(
+                s3Config.getUserGoalBucketName(),
+                userGoal.getCompleteVerificationPictureUrl(),
+                expiration
+        );
+
+
         UserGoalDto userGoalDto = UserGoalDto.builder()
                 .id(userGoal.getId())
                 .goalDatetime(userGoal.getGoalDatetime())
@@ -92,6 +111,7 @@ public class UserGoalController {
                 .verificationMethod(userGoal.getVerificationMethod())
                 .userId(userGoal.getUserId())
                 .status(UserGoalStatus.fromValue(userGoal.getStatus()))
+                .completeVerificationPictureUrl(presignedUrl.toString())
                 .build();
 
         return ResponseEntity.ok(userGoalDto);
@@ -189,7 +209,8 @@ public class UserGoalController {
                 .build();
     }
 
-    @PostMapping("/goals/{id}/complete")
+    @Operation(summary = "목표 성공처리(인증)", description = "목표 인증 사진을 업로드하며, 목표를 완료 처리합니다. request body는 form-data 로 요청 바랍니다.")
+    @PostMapping(value="/goals/{id}/complete", consumes = "multipart/form-data")
     public ResponseEntity<?> completeUserGoal(
             @PathVariable("id") Long id,
             @AuthenticationPrincipal CustomUserDetails userDetails,
@@ -199,9 +220,8 @@ public class UserGoalController {
 
         String bucketName = "modo-static-bucket";
         String fileExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-        String fileName = """
-                %s_%s.%s
-                """.formatted(id, System.currentTimeMillis(), fileExtension);
+        String fileName =
+                "%s_%s%s".formatted(id, System.currentTimeMillis(), fileExtension);
         this.s3Client.putObject(bucketName, fileName, file.getInputStream(), null);
 
         userGoal.setStatus(UserGoalStatus.SUCCESS.getValue());

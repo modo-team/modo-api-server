@@ -1,6 +1,9 @@
 server:
   port: 8080
 
+app:
+  user-goal-bucket-name: modo-static-bucket
+
 spring:
   application:
     name: modo-api-server
