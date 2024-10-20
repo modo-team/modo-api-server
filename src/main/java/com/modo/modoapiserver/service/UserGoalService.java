@@ -3,12 +3,14 @@ package com.modo.modoapiserver.service;
 import com.modo.modoapiserver.dto.service.usergoal.UserGoalDto;
 import com.modo.modoapiserver.model.UserGoal;
 import com.modo.modoapiserver.repository.UserGoalRepository;
+import com.modo.modoapiserver.security.CustomUserDetails;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class UserGoalService {
@@ -60,5 +62,17 @@ public class UserGoalService {
     }
     public List<UserGoal> getUserGoalsBetween(Long userId, LocalDateTime start, LocalDateTime end) {
         return userGoalRepository.findByUserIdAndGoalDatetimeBetween(userId, start, end);
+    }
+
+    public boolean isUserGoalAccessible(Long userGoalId, CustomUserDetails userDetails) {
+        try {
+            UserGoal userGoal = this.getUserGoal(userGoalId);
+            if (!userGoal.getUserId().equals(userDetails.getIdentity())) {
+                throw new NoSuchElementException();
+            }
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+        return true;
     }
 }
