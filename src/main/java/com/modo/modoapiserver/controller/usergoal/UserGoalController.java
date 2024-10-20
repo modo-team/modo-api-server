@@ -138,7 +138,6 @@ public class UserGoalController {
     @Operation(summary = "목표 업데이트", description = "목표를 업데이트합니다.")
     @PatchMapping("/goal/{id}")
     public ResponseEntity<?> patchUserGoal(@PathVariable("id") Long id, @RequestBody RequestUserGoalDto requestUserGoalDto, @AuthenticationPrincipal CustomUserDetails userDetails){
-        // TODO: jwt 토큰에서 사용자 정보를 가져와서 사용자의 목표인지 확인하는 로직 추가
         UserGoal userGoal = userGoalService.getUserGoal(id);
 
         boolean isUserGoalAccessible = userGoalService.isUserGoalAccessible(id, userDetails);
